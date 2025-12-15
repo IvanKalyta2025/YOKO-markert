@@ -19,8 +19,8 @@ services:
       - "traefik.http.services.backend.loadbalancer.server.port=8080"
     # Pass in connection information as Environment Variables
     # environment:
-      # - PostgreSQL Connection Info
-      # - MinIO Connection Info
+    # - PostgreSQL Connection Info
+    # - MinIO Connection Info
 
   postgres:
     image: postgres:15
