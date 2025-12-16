@@ -13,6 +13,7 @@ services:
 
   file-service:
     build: ./services/file-service
+    # ...
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.backend.rule=Host(`file-service.localhost`)"

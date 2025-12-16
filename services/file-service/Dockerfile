@@ -1,15 +1,26 @@
+# Stage 1: Build
 FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
-WORKDIR /App
+WORKDIR /src
 
-# Copy everything
-COPY . ./
-# Restore as distinct layers
-RUN dotnet restore FileService.sln
-# Build and publish a release
-RUN dotnet publish Api --configuration Release --output out
+# 1. КОПИРУЕМ ТОЛЬКО ФАЙЛЫ ПРОЕКТА/РЕШЕНИЯ ДЛЯ КЭШИРОВАНИЯ
+# Assuming FileService.sln and Api.csproj are at the same level as Dockerfile
+COPY *.sln .
+COPY Api/*.csproj ./Api/
 
-# Build runtime image
+# 2. ВОССТАНОВЛЕНИЕ ПАКЕТОВ
+RUN dotnet restore
+
+# 3. КОПИРУЕМ ОСТАЛЬНОЙ КОД
+COPY . .
+
+# 4. СБОРКА И ПУБЛИКАЦИЯ
+# Публикуем по имени папки (Api)
+RUN dotnet publish Api --configuration Release --output /app/publish
+
+# Stage 2: Runtime
 FROM mcr.microsoft.com/dotnet/aspnet:9.0
-WORKDIR /App
-COPY --from=build /App/out .
+WORKDIR /app
+# Копируем результаты публикации
+COPY --from=build /app/publish .
+# Убедитесь, что имя DLL соответствует имени проекта (Api)
 ENTRYPOINT ["dotnet", "Api.dll"]
