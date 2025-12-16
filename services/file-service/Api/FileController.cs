@@ -19,7 +19,7 @@ namespace Api
         public async Task<IActionResult> Upload(IFormFile file)
         {
             if (file == null || file.Length == 0)
-                return BadRequest("Файл не выбран");
+                return BadRequest("File not selected");
 
             using var memoryStream = new MemoryStream();
             await file.CopyToAsync(memoryStream);
@@ -30,7 +30,37 @@ namespace Api
 
             await _fileService.UploadFileAsync(bucketName, file.FileName, fileData);
 
-            return Ok($"Файл {file.FileName} успешно загружен!");
+            return Ok($"File {file.FileName} uploaded successfully!");
+        }
+
+        [HttpGet("download/{fileName}")]
+        public async Task<IActionResult> Download(string fileName)
+        {
+            // ... (проверки)
+
+            string bucketName = "sape";
+
+            byte[] fileData = await _fileService.DownloadFileAsync(bucketName, fileName);
+
+            if (fileData == null)
+            {
+                return NotFound($"File '{fileName}' was not found.");
+            }
+
+            // 🚨 ВРЕМЕННЫЙ ТЕСТ: Возвращаем текст вместо файла
+            if (fileData.Length > 0)
+            {
+                // 🟢 Сюда попадаем, если сервис вернул данные.
+                // КОНСОЛЬ В БРАУЗЕРЕ ДОЛЖНА ПОКАЗАТЬ ДЛИНУ БОЛЬШЕ 0
+                return Ok($"SUCCESS! File found. Expected length: {fileData.Length} bytes.");
+            }
+            else
+            {
+                // 🔴 Сюда попадаем, если сервис вернул пустой массив (byte[0])
+                return BadRequest($"FAILURE! File found, but returned zero bytes. Length: {fileData.Length}");
+            }
+
+            // return File(fileData, contentType, fileName); // Закомментируйте эту строку
         }
     }
 }

@@ -40,5 +40,54 @@ namespace Api
 
             await _minioClient.PutObjectAsync(putObjectArgs).ConfigureAwait(false);
         }
+        public async Task<byte[]> DownloadFileAsync(string bucketName, string objectName)
+        {
+            try
+            {
+                // Создаем MemoryStream для хранения данных
+                using var memoryStream = new MemoryStream();
+
+                // 1. Создаем аргументы для GET-запроса
+                var getObjectArgs = new GetObjectArgs()
+                    .WithBucket(bucketName)
+                    .WithObject(objectName)
+                    .WithCallbackStream(async (stream) =>
+                    {
+                        // 2. Копируем поток из MinIO в наш MemoryStream
+                        await stream.CopyToAsync(memoryStream);
+                    });
+
+                // 3. Выполняем запрос
+                await _minioClient.GetObjectAsync(getObjectArgs).ConfigureAwait(false);
+
+                // 4. Возвращаем null, если файл пустой (0 байт),
+                //    чтобы это было обработано в контроллере как "не найдено/проблема".
+                if (memoryStream.Length == 0)
+                {
+                    // Это необходимо, чтобы поймать случаи, когда файл не найден,
+                    // но исключение ObjectNotFoundException не было брошено.
+                    return null;
+                }
+
+                // 5. Возвращаем данные в виде массива байтов
+                return memoryStream.ToArray();
+            }
+            catch (Minio.Exceptions.ObjectNotFoundException)
+            {
+                // Если MinIO не нашел объект, возвращаем null (как ожидает контроллер)
+                return null;
+            }
+            catch (Exception ex)
+            {
+                // 🚨 ВЫВОДИТЕ ВЕСЬ ТИП И ТЕКСТ ОШИБКИ
+                Console.WriteLine($"[CRITICAL ERROR] Тип ошибки: {ex.GetType().Name}");
+                Console.WriteLine($"[CRITICAL ERROR] Сообщение: {ex.Message}");
+                Console.WriteLine($"Ошибка при скачивании файла: {ex.Message}");
+
+                // Если MinIO не смог соединиться, здесь будет указана причина.
+                return null;
+            }
+        }
+
     }
 }
