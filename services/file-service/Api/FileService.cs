@@ -3,12 +3,14 @@ using System.Threading.Tasks;
 using Minio;
 using Microsoft.Extensions.Configuration;
 using Minio.DataModel.Args;
+using Microsoft.AspNetCore.StaticFiles;
 
 namespace Api
 {
     public class FileService
     {
         private readonly IMinioClient _minioClient;
+        private readonly FileExtensionContentTypeProvider _contentTypeProvider;
 
         public FileService(IConfiguration configuration)
         {
@@ -16,6 +18,8 @@ namespace Api
                 .WithEndpoint(configuration["Minio:Endpoint"])
                 .WithCredentials(configuration["Minio:AccessKey"], configuration["Minio:SecretKey"])
                 .Build();
+
+            _contentTypeProvider = new FileExtensionContentTypeProvider();
         }
 
         public async Task UploadFileAsync(string bucketName, string objectName, byte[] fileData)
@@ -36,11 +40,11 @@ namespace Api
                 .WithObject(objectName)
                 .WithStreamData(stream)
                 .WithObjectSize(stream.Length)
-                .WithContentType("application/octet-stream");
+                .WithContentType("application/octet-stream"); // убираем жёсткое задание типа
 
             await _minioClient.PutObjectAsync(putObjectArgs).ConfigureAwait(false);
         }
-        public async Task<byte[]> DownloadFileAsync(string bucketName, string objectName)
+        public async Task<(byte[] Data, string ContentType)> DownloadFileAsync(string bucketName, string objectName) //добавлен ContentType
         {
             try
             {
@@ -66,26 +70,25 @@ namespace Api
                 {
                     // Это необходимо, чтобы поймать случаи, когда файл не найден,
                     // но исключение ObjectNotFoundException не было брошено.
-                    return null;
+                    return (null, null);
                 }
 
                 // 5. Возвращаем данные в виде массива байтов
-                return memoryStream.ToArray();
+                return (memoryStream.ToArray(), "application/octet-stream");
             }
             catch (Minio.Exceptions.ObjectNotFoundException)
             {
                 // Если MinIO не нашел объект, возвращаем null (как ожидает контроллер)
-                return null;
+                return (null, null);
             }
             catch (Exception ex)
             {
-                // 🚨 ВЫВОДИТЕ ВЕСЬ ТИП И ТЕКСТ ОШИБКИ
                 Console.WriteLine($"[CRITICAL ERROR] Тип ошибки: {ex.GetType().Name}");
                 Console.WriteLine($"[CRITICAL ERROR] Сообщение: {ex.Message}");
                 Console.WriteLine($"Ошибка при скачивании файла: {ex.Message}");
 
                 // Если MinIO не смог соединиться, здесь будет указана причина.
-                return null;
+                return (null, null);
             }
         }
 

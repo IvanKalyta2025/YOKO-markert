@@ -1,6 +1,8 @@
 using System.IO;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.StaticFiles;
+using Microsoft.AspNetCore.Http;
 
 namespace Api
 {
@@ -36,31 +38,36 @@ namespace Api
         [HttpGet("download/{fileName}")]
         public async Task<IActionResult> Download(string fileName)
         {
-            // ... (проверки)
+            if (string.IsNullOrEmpty(fileName))
+                return BadRequest("File name is required.");
 
             string bucketName = "sape";
 
-            byte[] fileData = await _fileService.DownloadFileAsync(bucketName, fileName);
+            //byte[] fileData = await _fileService.DownloadFileAsync(bucketName, fileName);
+            var (fileData, contentType) = await _fileService.DownloadFileAsync(bucketName, fileName);
 
             if (fileData == null)
             {
                 return NotFound($"File '{fileName}' was not found.");
             }
+            // var provider = new FileExtensionContentTypeProvider();
 
-            // 🚨 ВРЕМЕННЫЙ ТЕСТ: Возвращаем текст вместо файла
-            if (fileData.Length > 0)
-            {
-                // 🟢 Сюда попадаем, если сервис вернул данные.
-                // КОНСОЛЬ В БРАУЗЕРЕ ДОЛЖНА ПОКАЗАТЬ ДЛИНУ БОЛЬШЕ 0
-                return Ok($"SUCCESS! File found. Expected length: {fileData.Length} bytes.");
-            }
-            else
-            {
-                // 🔴 Сюда попадаем, если сервис вернул пустой массив (byte[0])
-                return BadRequest($"FAILURE! File found, but returned zero bytes. Length: {fileData.Length}");
-            }
+            // //string contentType;
+            // // Пытаемся понять тип по имени файла (например, "photo.jpg" -> "image/jpeg")
+            // if (!provider.TryGetContentType(fileName, out contentType))
+            // {
+            //     // Если расширение незнакомое, ставим дефолт
+            //     contentType = "application/octet-stream";
+            // }
 
-            // return File(fileData, contentType, fileName); // Закомментируйте эту строку
+            // Использование FileContentResult для явного указания имени файла
+            // Это гарантирует, что браузер получит заголовок Content-Disposition: attachment
+            var fileResult = new FileContentResult(fileData, contentType)
+            {
+                FileDownloadName = fileName
+            };
+            return fileResult;
+
         }
     }
 }
