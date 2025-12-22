@@ -12,10 +12,12 @@ namespace Api.Repositories
     public class ProfileRepository : IProfileRepository
     {
         private readonly AppDbContext _db;
+        private readonly FileService _fileService;
 
-        public ProfileRepository(AppDbContext db)
+        public ProfileRepository(AppDbContext db, FileService fileService)
         {
             _db = db;
+            _fileService = fileService;
         }
 
         public async Task AddAsync(Profile profile)
@@ -29,9 +31,13 @@ namespace Api.Repositories
             return await _db.Profiles.FirstOrDefaultAsync(p => p.UserId == userId);
         }
 
-        public Task UploadFileAsync(string objectName, Stream fileData)
+        public async Task UploadFileAsync(string objectName, Stream fileData)
         {
-            throw new NotImplementedException();
+            using var ms = new MemoryStream();
+            await fileData.CopyToAsync(ms);
+            byte[] bytes = ms.ToArray();
+
+            await _fileService.UploadFileAsync("profiles", objectName, bytes);
         }
     }
 }
