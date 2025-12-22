@@ -14,6 +14,7 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 builder.WebHost.UseUrls("http://0.0.0.0:8080");
 
 builder.Services.AddScoped<IUserRepository, UserRepositoryDb>();
+builder.Services.AddScoped<IProfileRepository, ProfileRepository>();
 builder.Services.AddScoped<UserService>();
 builder.Services.AddControllers();
 

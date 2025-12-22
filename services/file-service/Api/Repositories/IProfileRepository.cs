@@ -8,8 +8,8 @@ namespace Api.Repositories
 {
     public interface IProfileRepository
     {
-        void Add(Profile profile);
-        Profile? GetByUserId(Guid userId);
+        Task AddAsync(Profile profile);
+        Task<Profile?> GetByUserIdAsync(Guid userId);
     }
 }
 
