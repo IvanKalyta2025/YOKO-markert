@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Api.Models;
 
+
 namespace Api.Repositories
 {
     public interface IProfileRepository
@@ -11,6 +12,7 @@ namespace Api.Repositories
         Task AddAsync(Profile profile);
         Task<Profile?> GetByUserIdAsync(Guid userId);
         Task UploadFileAsync(string objectName, Stream fileData);
+
     }
 }
 

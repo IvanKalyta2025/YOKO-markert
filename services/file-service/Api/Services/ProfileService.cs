@@ -12,20 +12,27 @@ namespace Api.Services
     public class ProfileService
     {
         private readonly IProfileRepository _profileRepository;
-        private readonly IUserRepository _userRepository;
-
+        //private readonly IUserRepository _userRepository;
         private readonly FileService _fileService;
 
-        public ProfileService(IProfileRepository profileRepository, IUserRepository userRepository, FileService fileService)
+        public ProfileService(IProfileRepository profileRepository, FileService fileService)
         {
             _profileRepository = profileRepository;
-            _userRepository = userRepository;
             _fileService = fileService;
         }
 
-        public async Task CreateProfileAsync(Stream fileData, string objectName)
+        public async Task CreateProfileAsync(Guid userId, string firstName, string lastName, byte[] fileData, string fileName)
         {
-            var fileUrl = await _fileService.UploadFileAsync(objectName, fileData);
+            var fileUrl = await _fileService.UploadFileAsync("sape", fileName, fileData);
+
+            var profile = new Profile
+            {
+                UserId = userId,
+                FirstName = firstName,
+                LastName = lastName,
+                AvatarUrl = fileUrl
+            };
+            await _profileRepository.AddAsync(profile);
         }
     }
 }

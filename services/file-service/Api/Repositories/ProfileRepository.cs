@@ -29,5 +29,9 @@ namespace Api.Repositories
             return await _db.Profiles.FirstOrDefaultAsync(p => p.UserId == userId);
         }
 
+        public Task UploadFileAsync(string objectName, Stream fileData)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
