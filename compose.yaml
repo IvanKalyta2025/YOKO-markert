@@ -1,6 +1,6 @@
 services:
   gateway:
-    image: traefik:v2.10
+    image: traefik:v3.3
     ports:
       - "80:80"
       - "9001:8080"
@@ -21,6 +21,7 @@ services:
 
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
+      - DOCKER_API_VERSION=1.44
       - ConnectionStrings__DefaultConnection=Host=postgres;Port=5432;Database=filesdb;Username=user;Password=pass
     depends_on:
       - postgres
