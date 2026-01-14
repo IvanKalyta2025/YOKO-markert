@@ -9,7 +9,7 @@ services:
       - "--providers.docker=true"
       - "--providers.docker.exposedByDefault=false"
       - "--entrypoints.web.address=:80"
-      - "--providers.docker.version=1.52"
+      - "--providers.docker.version=1.5"
     environment:
       - DOCKER_API_VERSION=1.52
     volumes:

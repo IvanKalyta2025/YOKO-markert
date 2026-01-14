@@ -24,7 +24,6 @@ builder.Services.AddScoped<UserService>();
 builder.Services.AddControllers();
 builder.Services.AddScoped<FileService>();
 
-
 var app = builder.Build();
 app.UseForwardedHeaders(new ForwardedHeadersOptions
 {
@@ -34,11 +33,7 @@ app.UseForwardedHeaders(new ForwardedHeadersOptions
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
-    app.UseSwaggerUI(options =>
-    {
-        //направление пути для того что бы свагер мог понимать что его испольщует трафик.
-        options.SwaggerEndpoint("v1/swagger.json", "File Service API V1");
-    });
+    app.UseSwaggerUI();
 }
 
 using (var scope = app.Services.CreateScope())
