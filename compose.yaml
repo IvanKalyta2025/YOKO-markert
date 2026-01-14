@@ -9,7 +9,7 @@ services:
       - "--providers.docker=true"
       - "--providers.docker.exposedByDefault=false"
       - "--entrypoints.web.address=:80"
-      - "--providers.docker.endpoint=unix:///var/run/docker.sock" # Добавь эту строку
+      - "--providers.docker.endpoint=unix:///var/run/docker.sock"
     environment:
       - DOCKER_API_VERSION=1.44
     volumes:
@@ -18,7 +18,6 @@ services:
     build: ./services/file-service
     labels:
       - "traefik.enable=true"
-      # Меняем имя роутера на уникальное для этого сервиса
       - "traefik.http.routers.file-service.rule=Host(`localhost`) || Host(`77.42.72.42`)"
       - "traefik.http.routers.file-service.entrypoints=web"
       - "traefik.http.services.file-service.loadbalancer.server.port=8080"
