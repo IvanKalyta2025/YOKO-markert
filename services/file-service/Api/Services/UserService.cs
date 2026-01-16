@@ -33,6 +33,7 @@ public class UserService
 
         await _repository.AddAsync(user);
         return user;
+
     }
 
     public async Task<User> RegisterAsync(RegisterRequest registerRequest)

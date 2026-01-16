@@ -5,8 +5,5 @@ using System.Threading.Tasks;
 
 namespace Api.Models
 {
-    public class AuthResult
-    {
-        public record AuthResult(bool Success, string Message);
-    }
+    public record AuthResult(bool Success, string Message);
 }
