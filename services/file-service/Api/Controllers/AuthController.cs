@@ -15,29 +15,19 @@ public class AuthController : ControllerBase
         _userService = userService;
     }
 
-    //заменить контроллер для прокидыания AuthResult и других моделей
-
-
     [HttpPost("register")]
     public async Task<IActionResult> Register(RegisterRequest request)
     {
-        try
+        var result = await _userService.RegisterAsync(request);
+
+        if (!result.Success)
+            return BadRequest(new { error = result.Message });
+
+        return Ok(new
         {
-            var user = await _userService.RegisterAsync(request.Email, request.Password);
-            return Ok(user); //ждем тут возвращения с user service успешного AuthResult 
-        }
-        catch (ArgumentException ex)
-        {
-            return BadRequest(new { error = ex.Message }); // 400
-        }
-        catch (InvalidOperationException ex)
-        {
-            return Conflict(new { error = ex.Message }); // 409
-        }
-        catch (Exception)
-        {
-            return StatusCode(500, new { error = "Internal server error." }); // 500
-        }
+            message = result.Message,
+            userId = result.User?.Id
+        });
     }
 
     [HttpPost("login")]
@@ -52,6 +42,6 @@ public class AuthController : ControllerBase
     }
 }
 
-public record RegisterRequest(string Email, string Password);
+// public record RegisterRequest(string Email, string Password);
 public record LoginRequest(string Email, string Password);
 

@@ -3,6 +3,7 @@ using Api.Repositories;
 using System.ComponentModel.DataAnnotations;
 using System.Security.Cryptography;
 using System.Text;
+using Api.Controllers;
 
 namespace Api.Services;
 
