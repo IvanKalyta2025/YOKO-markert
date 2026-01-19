@@ -33,18 +33,12 @@ public class AuthController : ControllerBase
     [HttpPost("login")]
     public async Task<IActionResult> Login(LoginRequest request)
     {
-        var user = await _userService.LoginAsync(request.Email, request.Password);
-        if (user == null)
-            return Unauthorized(new { error = "Invalid email or password." });
+        var result = await _userService.LoginAsync(request);
 
-        return Ok(new
-        {
-            message = "Login successful.",
-            userId = user.Id
-        });
+        if (!result.Success)
+            return BadRequest(result);
+        return Ok(result);
     }
 }
 
-// public record RegisterRequest(string Email, string Password);
-public record LoginRequest(string Email, string Password);
 

@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Security.Cryptography;
 using System.Text;
 using Api.Controllers;
+using BCrypt.Net;
 
 namespace Api.Services;
 
@@ -29,20 +30,25 @@ public class UserService
         var user = new User
         {
 
-            // Email = request.Email,
-            // PasswordHash = HashPassword(request.Password)
+            Email = request.Email,
+            PasswordHash = BCrypt.Net.BCrypt.HashPassword(request.Password)
         };
 
         return new AuthResult(true, "Registration successful.", user);
     }
 
-    public async Task<User?> LoginAsync(LoginRequest request)
+    public async Task<AuthResult> LoginAsync(LoginRequest request)
     {
         var user = await _repository.GetByEmailAsync(request.Email);
 
         if (user != null)
             return new AuthResult(false, "User not found.");
 
+        bool isPasswordValid = BCrypt.Net.BCrypt.Verify(request.Password, user.PasswordHash);
+        if (!isPasswordValid)
+            return new AuthResult(false, "Invalid password.");
+
+        return new AuthResult(true, "Login successful.", user);
     }
 
 }
