@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Api.Models;
 using Api.Services;
+using NSubstitute.Routing.Handlers;
 
 namespace Api.Controllers;
 
@@ -43,6 +44,22 @@ public class AuthController : ControllerBase
                 message = result.Message,
                 userId = result.User?.Id
             });
+    }
+    [HttpPost("change")]
+    public async Task<IActionResult> Change(ChangeRequest request)
+    {
+        var result = await _userService.ChangePasswordAsync(request);
+
+        if (!result.Success)
+            return BadRequest(new { error = result.Message });
+
+        else
+            return Ok(new
+            {
+                message = result.Message,
+                userId = result.User?.Id
+            }
+            );
     }
 }
 

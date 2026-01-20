@@ -54,4 +54,9 @@ public class UserAuthorizationService
         return new AuthResult(true, "Login successful.", user);
     }
 
+    public async Task<AuthResult> ChangePasswordAsync(ChangePasswordRequest request)
+    {
+
+    }
+
 }
