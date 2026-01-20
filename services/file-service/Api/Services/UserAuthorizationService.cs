@@ -56,7 +56,22 @@ public class UserAuthorizationService
 
     public async Task<AuthResult> ChangePasswordAsync(ChangePasswordRequest request)
     {
+        var user = await _repository.GetByEmailAsync(request.Email);
 
+        if (user == null)
+            return new AuthResult(false, "User not found.");
+
+        bool isPasswordCorrect = BCrypt.Net.BCrypt.Verify(request.CurrentPassword, user.PasswordHash);
+        if (!isPasswordCorrect)
+            return new AuthResult(false, "Invalid password, try again to change your password.");
+
+        user.PasswordHash = BCrypt.Net.BCrypt.HashPassword(request.NewPassword);
+
+        await _repository.SaveChangesAsync();
+
+        return new AuthResult(true, "Change successful.");
     }
+
+    // public record ChangePasswordRequest(string Email, string currentPassword, string newPassword);
 
 }

@@ -46,7 +46,7 @@ public class AuthController : ControllerBase
             });
     }
     [HttpPost("change")]
-    public async Task<IActionResult> Change(ChangeRequest request)
+    public async Task<IActionResult> Change(ChangePasswordRequest request)
     {
         var result = await _userService.ChangePasswordAsync(request);
 
