@@ -25,13 +25,13 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ConnectionStrings__DefaultConnection=Host=postgres;Port=5432;Database=filesdb;Username=user;Password=pass
+
     depends_on:
       - postgres
       - object-storage
   postgres:
     image: postgres:15
     container_name: yoko-postgres-1
-    # ports на одном уровне с image и environment (2 пробела от начала строки)
     ports:
       - "5432:5432"
     environment:
