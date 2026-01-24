@@ -24,7 +24,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<UserAuthorizationService>();
 builder.Services.AddControllers();
-builder.Services.AddScoped<FileService>();
+builder.Services.AddScoped<MinioService>();
 
 var app = builder.Build();
 

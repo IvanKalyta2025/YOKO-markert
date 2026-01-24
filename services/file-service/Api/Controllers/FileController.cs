@@ -12,9 +12,9 @@ namespace Api
     [Route("[controller]")]
     public class FileController : ControllerBase
     {
-        private readonly FileService _fileService;
+        private readonly MinioService _fileService;
 
-        public FileController(FileService fileService)
+        public FileController(MinioService fileService)
         {
             _fileService = fileService;
         }

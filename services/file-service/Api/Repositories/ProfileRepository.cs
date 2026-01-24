@@ -12,9 +12,9 @@ namespace Api.Repositories
     public class ProfileRepository : IProfileRepository
     {
         private readonly AppDbContext _db;
-        private readonly FileService _fileService;
+        private readonly MinioService _fileService;
 
-        public ProfileRepository(AppDbContext db, FileService fileService)
+        public ProfileRepository(AppDbContext db, MinioService fileService)
         {
             _db = db;
             _fileService = fileService;

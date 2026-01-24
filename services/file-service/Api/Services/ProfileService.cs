@@ -12,9 +12,9 @@ namespace Api.Services
     public class ProfileService
     {
         private readonly IProfileRepository _profileRepository;
-        private readonly FileService _fileService;
+        private readonly MinioService _fileService;
 
-        public ProfileService(IProfileRepository profileRepository, FileService fileService)
+        public ProfileService(IProfileRepository profileRepository, MinioService fileService)
         {
             _profileRepository = profileRepository;
             _fileService = fileService;
