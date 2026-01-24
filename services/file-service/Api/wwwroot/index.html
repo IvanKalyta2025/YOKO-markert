@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="no">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Jobbmarked - Registrering</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="container">
+      <div class="card">
+        <h2>Opprett ny konto</h2>
+        <form id="registerForm">
+          <div class="input-group">
+            <label for="email">E-postadresse</label>
+            <input
+              type="email"
+              id="email"
+              required
+              placeholder="ola.nordmann@eksempel.no"
+            />
+          </div>
+          <div class="input-group">
+            <label for="password">Passord</label>
+            <input
+              type="password"
+              id="password"
+              required
+              placeholder="Minst 6 tegn"
+            />
+          </div>
+          <button type="submit">Registrer deg</button>
+        </form>
+        <div id="message" class="message"></div>
+      </div>
+    </div>
+
+    <script>
+      document
+        .getElementById("registerForm")
+        .addEventListener("submit", async (e) => {
+          e.preventDefault();
+          const email = document.getElementById("email").value;
+          const password = document.getElementById("password").value;
+          const messageBox = document.getElementById("message");
+
+          // Сброс стиля сообщения перед новым запросом
+          messageBox.style.color = "var(--text-muted)";
+          messageBox.innerText = "Behandler..."; // Обработка...
+
+          try {
+            // УБЕДИСЬ, что твой C# контроллер слушает именно '/Auth/register'
+            const response = await fetch("/Auth/register", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ email, password }),
+            });
+
+            const result = await response.json();
+
+            if (result.success) {
+              // Используем профессиональный зеленый цвет для успеха
+              messageBox.style.color = "#28a745";
+              // Сообщение берется с сервера, убедись, что там тоже можно отдавать на норвежском
+              messageBox.innerText = "Suksess! " + result.message;
+            } else {
+              // Профессиональный красный для ошибки
+              messageBox.style.color = "#dc3545";
+              messageBox.innerText = "Feil: " + result.message; // Ошибка: ...
+            }
+          } catch (error) {
+            console.error("Error:", error);
+            messageBox.style.color = "#dc3545";
+            messageBox.innerText = "Kunne ikke koble til serveren."; // Не удалось подключиться к серверу
+          }
+        });
+    </script>
+  </body>
+</html>

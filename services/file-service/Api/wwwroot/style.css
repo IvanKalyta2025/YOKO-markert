@@ -1,0 +1,103 @@
+:root {
+  /* Норвежская профессиональная палитра */
+  --primary-blue: #0056b3; /* Глубокий синий - доверие */
+  --primary-blue-hover: #004494;
+  --background-light: #f4f6f8; /* Светло-серый фон */
+  --text-dark: #2c3e50;
+  --text-muted: #6c757d;
+  --white: #ffffff;
+  --border-color: #dee2e6;
+}
+
+body {
+  background-color: var(--background-light);
+  color: var(--text-dark);
+  font-family:
+    -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial,
+    sans-serif; /* Системные шрифты для чистоты */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  margin: 0;
+  padding: 20px; /* Отступ для мобилок */
+}
+
+.container {
+  width: 100%;
+  max-width: 420px;
+}
+
+/* Карточка теперь белая и чистая */
+.card {
+  background-color: var(--white);
+  padding: 40px;
+  border-radius: 8px;
+  /* Очень мягкая тень в скандинавском стиле */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  text-align: left; /* Текст слева более профессионально */
+}
+
+h2 {
+  margin-top: 0;
+  margin-bottom: 25px;
+  color: var(--primary-blue);
+  font-weight: 600;
+  text-align: center;
+}
+
+.input-group {
+  margin-bottom: 20px;
+}
+
+label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 500;
+  color: var(--text-dark);
+  font-size: 0.95em;
+}
+
+input {
+  width: 100%;
+  padding: 12px;
+  border-radius: 6px;
+  border: 1px solid var(--border-color);
+  background-color: var(--white);
+  color: var(--text-dark);
+  font-size: 1em;
+  box-sizing: border-box;
+  transition: border-color 0.2s;
+}
+
+/* Акцент при фокусе */
+input:focus {
+  outline: none;
+  border-color: var(--primary-blue);
+  box-shadow: 0 0 0 3px rgba(0, 86, 179, 0.1);
+}
+
+button {
+  width: 100%;
+  padding: 14px;
+  background-color: var(--primary-blue);
+  color: var(--white);
+  border: none;
+  border-radius: 6px;
+  font-weight: 600;
+  font-size: 1.05em;
+  cursor: pointer;
+  margin-top: 10px;
+  transition: background-color 0.2s;
+}
+
+button:hover {
+  background-color: var(--primary-blue-hover);
+}
+
+.message {
+  margin-top: 20px;
+  font-size: 0.95em;
+  min-height: 20px;
+  text-align: center;
+}
