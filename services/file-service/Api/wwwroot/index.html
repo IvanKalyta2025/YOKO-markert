@@ -110,7 +110,48 @@
             <button type="submit" class="primary-btn">Lagre profil</button>
           </form>
           <div class="toggle-links">
+            <span class="link" onclick="showSection('change-password')"
+              >Bytt passord</span
+            >
             <span class="link" onclick="showSection('login')">Logg ut</span>
+          </div>
+        </div>
+
+        <div id="change-password" class="form-section">
+          <h2>Bytt passord</h2>
+          <form
+            onsubmit="
+              handleAuth(event, '/Auth/change-password', 'change-password')
+            "
+          >
+            <div class="input-group">
+              <label>E-postadresse</label>
+              <input
+                type="email"
+                name="email"
+                required
+                placeholder="ola@eksempel.no"
+              />
+            </div>
+            <div class="input-group">
+              <label>Gammelt passord</label>
+              <input type="password" name="oldPassword" required />
+            </div>
+            <div class="input-group">
+              <label>Nytt passord</label>
+              <input
+                type="password"
+                name="newPassword"
+                required
+                placeholder="Minst 6 tegn"
+              />
+            </div>
+            <button type="submit" class="primary-btn">Oppdater passord</button>
+          </form>
+          <div class="toggle-links">
+            <span class="link" onclick="showSection('profile')"
+              >Tilbake til profil</span
+            >
           </div>
         </div>
 
@@ -126,7 +167,6 @@
     </div>
 
     <script>
-      // Переключение между экранами
       function showSection(id) {
         document
           .querySelectorAll(".form-section, .visual-feedback")
@@ -135,11 +175,10 @@
         document.getElementById(id).classList.add("active");
 
         if (id === "login") {
-          localStorage.removeItem("token"); // Удаляем токен при выходе
+          localStorage.removeItem("token");
         }
       }
 
-      // Предпросмотр фото
       function previewImage(input) {
         if (input.files && input.files[0]) {
           const reader = new FileReader();
@@ -149,7 +188,6 @@
         }
       }
 
-      // Авторизация (Вход/Регистрация)
       async function handleAuth(event, url, type) {
         event.preventDefault();
         const data = Object.fromEntries(new FormData(event.target).entries());
@@ -162,39 +200,31 @@
           });
 
           const result = await response.json();
-          console.log("Результат от сервера:", result); // Посмотри в консоль F12, есть ли там token
-
           const token = result.token || result.Token;
 
           if (response.ok) {
             if (token) {
-              // Если сервер дал токен (и при логине, и при регистрации)
               localStorage.setItem("token", token);
               showSection("profile");
             } else if (type === "register") {
-              // Если это регистрация и сервер НЕ дал токен, но ответил 200 OK
-              // Мы всё равно идем в профиль, но предупреждаем
-              console.warn(
-                "Пользователь создан, но токен не получен. Сохранение может не сработать.",
-              );
+              showSection("login");
+            } else if (type === "change-password") {
+              alert("Passord er endret!");
               showSection("profile");
             }
           } else {
-            alert(result.message || "Упс! Ошибка авторизации.");
+            alert(result.error || result.message || "Noe gikk galt");
           }
         } catch (e) {
-          console.error("Критическая ошибка:", e);
-          alert("Serverfeil: Проверь консоль браузера.");
+          alert("Serverfeil");
         }
       }
 
-      // Обновление профиля
       async function handleProfileUpdate(event) {
         event.preventDefault();
         const token = localStorage.getItem("token");
 
         if (!token) {
-          alert("Du må logge inn!");
           showSection("login");
           return;
         }
@@ -204,7 +234,6 @@
         btn.innerText = "Lagrer...";
 
         try {
-          // Путь /api/Profile соответствует твоему [Route("api/[controller]")]
           const response = await fetch("/api/Profile", {
             method: "POST",
             headers: {
@@ -221,14 +250,11 @@
             document.getElementById("feedMessage").innerText =
               "Dine endringer er oppdatert.";
           } else if (response.status === 401) {
-            alert("Sesjonen er utløpt. Logg inn på nytt.");
             showSection("login");
           } else {
-            console.error("Server error:", await response.text());
             alert("Kunne ikke lagre profil.");
           }
         } catch (error) {
-          console.error("Profile error:", error);
           alert("Serverfeil.");
         } finally {
           btn.innerText = "Lagre profil";
