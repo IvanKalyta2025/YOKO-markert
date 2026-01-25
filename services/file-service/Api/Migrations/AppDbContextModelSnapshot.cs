@@ -25,7 +25,6 @@ namespace Api.Migrations
             modelBuilder.Entity("Api.Models.Profile", b =>
                 {
                     b.Property<Guid>("UserId")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
                     b.Property<string>("AvatarUrl")
@@ -40,12 +39,7 @@ namespace Api.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<Guid>("UserId1")
-                        .HasColumnType("uuid");
-
                     b.HasKey("UserId");
-
-                    b.HasIndex("UserId1");
 
                     b.ToTable("Profiles");
                 });
@@ -72,8 +66,8 @@ namespace Api.Migrations
             modelBuilder.Entity("Api.Models.Profile", b =>
                 {
                     b.HasOne("Api.Models.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId1")
+                        .WithOne()
+                        .HasForeignKey("Api.Models.Profile", "UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

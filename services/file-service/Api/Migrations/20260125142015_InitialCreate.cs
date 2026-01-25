@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Api.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialAfterRename : Migration
+    public partial class InitialCreate : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -31,24 +31,18 @@ namespace Api.Migrations
                     UserId = table.Column<Guid>(type: "uuid", nullable: false),
                     LastName = table.Column<string>(type: "text", nullable: false),
                     FirstName = table.Column<string>(type: "text", nullable: false),
-                    AvatarUrl = table.Column<string>(type: "text", nullable: false),
-                    UserId1 = table.Column<Guid>(type: "uuid", nullable: false)
+                    AvatarUrl = table.Column<string>(type: "text", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Profiles", x => x.UserId);
                     table.ForeignKey(
-                        name: "FK_Profiles_Users_UserId1",
-                        column: x => x.UserId1,
+                        name: "FK_Profiles_Users_UserId",
+                        column: x => x.UserId,
                         principalTable: "Users",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Profiles_UserId1",
-                table: "Profiles",
-                column: "UserId1");
         }
 
         /// <inheritdoc />
