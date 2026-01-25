@@ -44,7 +44,6 @@ namespace Api
 
             string bucketName = "profiles";
 
-            //byte[] fileData = await _fileService.DownloadFileAsync(bucketName, fileName);
             var (fileData, contentType) = await _fileService.DownloadFileAsync(bucketName, fileName);
 
             if (fileData == null)
