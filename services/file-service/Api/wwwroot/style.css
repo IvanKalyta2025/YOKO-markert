@@ -186,7 +186,7 @@ h2 {
   outline: none;
   border-color: rgba(37, 99, 235, 0.45);
   box-shadow: var(--ring);
-  background: rgba(255, 255, 255, 0.92);
+  background: rgba(39, 38, 38, 0.92);
 }
 
 .input-group input:active {
