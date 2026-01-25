@@ -41,7 +41,7 @@ namespace Api.Repositories
             await fileData.CopyToAsync(ms);
             byte[] bytes = ms.ToArray();
 
-            await _fileService.UploadFileAsync("profiles", objectName, bytes);
+            await _fileService.UploadFileAsync(_fileService.DefaultBucketName, objectName, bytes);
         }
     }
 }

@@ -29,7 +29,7 @@ namespace Api
             await file.CopyToAsync(memoryStream);
             var fileData = memoryStream.ToArray();
 
-            string bucketName = "profiles";
+            string bucketName = _fileService.DefaultBucketName;
 
             await _fileService.UploadFileAsync(bucketName, file.FileName, fileData);
 
@@ -42,7 +42,7 @@ namespace Api
             if (string.IsNullOrEmpty(fileName))
                 return BadRequest("File name is required.");
 
-            string bucketName = "profiles";
+            string bucketName = _fileService.DefaultBucketName;
 
             var (fileData, contentType) = await _fileService.DownloadFileAsync(bucketName, fileName);
 

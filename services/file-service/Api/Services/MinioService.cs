@@ -11,9 +11,11 @@ namespace Api
     {
         private readonly IMinioClient _minioClient;
         private readonly FileExtensionContentTypeProvider _contentTypeProvider;
+        private readonly string _defaultBucketName;
 
         public MinioService(IConfiguration configuration)
         {
+            _defaultBucketName = configuration["Minio:BucketName"] ?? "profiles";
             _minioClient = new MinioClient()
                 .WithEndpoint(configuration["Minio:Endpoint"])
                 .WithCredentials(configuration["Minio:AccessKey"], configuration["Minio:SecretKey"])
@@ -23,8 +25,12 @@ namespace Api
             _contentTypeProvider = new FileExtensionContentTypeProvider();
         }
 
+        public string DefaultBucketName => _defaultBucketName;
+
         public async Task<string> UploadFileAsync(string bucketName, string objectName, byte[] fileData)
         {
+            bucketName = string.IsNullOrWhiteSpace(bucketName) ? _defaultBucketName : bucketName;
+
             try
             {
                 var existsArgs = new BucketExistsArgs().WithBucket(bucketName);
@@ -61,6 +67,8 @@ namespace Api
 
         public async Task<(byte[] Data, string ContentType)> DownloadFileAsync(string bucketName, string objectName)
         {
+            bucketName = string.IsNullOrWhiteSpace(bucketName) ? _defaultBucketName : bucketName;
+
             try
             {
                 using var memoryStream = new MemoryStream();
