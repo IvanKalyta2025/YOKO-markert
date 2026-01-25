@@ -55,7 +55,7 @@ namespace Api
                 .WithContentType(contentType);
 
             await _minioClient.PutObjectAsync(putObjectArgs).ConfigureAwait(false);
-            return $"http://file-service.localhost/{bucketName}/{objectName}";
+            return $"/{bucketName}/{objectName}";
         }
 
         public async Task<(byte[] Data, string ContentType)> DownloadFileAsync(string bucketName, string objectName)
