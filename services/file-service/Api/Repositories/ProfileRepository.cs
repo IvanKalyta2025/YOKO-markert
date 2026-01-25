@@ -1,11 +1,9 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
+using System.IO;
 using System.Threading.Tasks;
 using Api.Data;
 using Api.Models;
 using Microsoft.EntityFrameworkCore;
-using Api.Repositories;
 
 namespace Api.Repositories
 {
@@ -23,6 +21,12 @@ namespace Api.Repositories
         public async Task AddAsync(Profile profile)
         {
             await _db.Profiles.AddAsync(profile);
+            await _db.SaveChangesAsync();
+        }
+
+        public async Task UpdateAsync(Profile profile)
+        {
+            _db.Profiles.Update(profile);
             await _db.SaveChangesAsync();
         }
 
