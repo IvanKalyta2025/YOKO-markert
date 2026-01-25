@@ -1,10 +1,18 @@
 <!doctype html>
-<html lang="no">
+<html lang="no" class="js-loading">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="color-scheme" content="light dark" />
     <title>Jobbmarked - Min Profil</title>
+
+    <!-- Anti-flicker: hide sections until JS decides -->
+    <style>
+      html.js-loading .form-section {
+        display: none !important;
+        opacity: 0 !important;
+      }
+    </style>
 
     <!-- Inter font -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -34,7 +42,7 @@
         </div>
 
         <!-- LOGIN -->
-        <section id="login" class="form-section active">
+        <section id="login" class="form-section">
           <h2>Velkommen tilbake</h2>
 
           <form onsubmit="handleAuth(event, '/Auth/login', 'login')">
@@ -208,6 +216,13 @@
 
     <script>
       const AVATAR_CACHE_KEY = "avatar_preview";
+      let initialRenderDone = false;
+
+      function endInitialRender() {
+        if (initialRenderDone) return;
+        initialRenderDone = true;
+        document.documentElement.classList.remove("js-loading");
+      }
 
       function showSection(id) {
         document.querySelectorAll(".form-section").forEach((s) => {
@@ -220,6 +235,8 @@
           target.style.display = "flex";
           setTimeout(() => target.classList.add("active"), 10);
         }
+
+        endInitialRender();
       }
 
       function previewImage(input) {
@@ -312,7 +329,6 @@
           return;
         }
 
-        // 1) Сразу применяем локально сохранённый аватар (на случай, если сервер не отдаёт avatarUrl)
         applyCachedAvatarIfAny();
 
         try {
@@ -327,7 +343,6 @@
               `${profile.firstName || ""} ${profile.lastName || ""}`.trim() ||
               "Ukjent Bruker";
 
-            // 2) Если сервер всё-таки отдает avatarUrl — используем его и кэшируем
             const serverAvatar = profile.avatarUrl || "";
             if (serverAvatar && serverAvatar !== "default-avatar.png") {
               const busted =
@@ -377,17 +392,13 @@
           });
 
           if (response.ok) {
-            // 1) сразу показать новое фото из превью
             const previewSrc = document.getElementById(
               "edit-avatar-preview",
             ).src;
 
             setAvatarEverywhere(previewSrc);
-
-            // 2) сохранить в localStorage, чтобы после F5 не откатывалось
             localStorage.setItem(AVATAR_CACHE_KEY, previewSrc);
 
-            // 3) подтянуть профиль (имя/фамилия и, если сервер отдаст, avatarUrl)
             await loadProfileData();
           } else {
             const err = await response.text().catch(() => "");
@@ -403,13 +414,10 @@
 
       function logout() {
         localStorage.removeItem("token");
-        // Если хочешь, чтобы при выходе аватар сбрасывался — раскомментируй:
-        // localStorage.removeItem(AVATAR_CACHE_KEY);
         showSection("login");
       }
 
       window.onload = () => {
-        // применяем кэш сразу, ещё до запросов
         applyCachedAvatarIfAny();
 
         if (localStorage.getItem("token")) {
