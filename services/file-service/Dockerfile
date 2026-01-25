@@ -10,6 +10,7 @@ RUN dotnet restore
 
 COPY . .
 
+
 # Собираем основной проект
 RUN dotnet publish Api/Api.csproj --configuration Release --output /app/publish
 
@@ -20,3 +21,4 @@ WORKDIR /app
 COPY --from=build /app/publish .
 
 ENTRYPOINT ["dotnet", "Api.dll"]
+
