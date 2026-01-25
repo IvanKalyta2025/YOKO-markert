@@ -1,7 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Api.Models;
 using Api.Services;
-using NSubstitute.Routing.Handlers;
 
 namespace Api.Controllers;
 
@@ -27,7 +26,8 @@ public class AuthController : ControllerBase
         return Ok(new
         {
             message = result.Message,
-            userId = result.User?.Id
+            userId = result.User?.Id,
+            token = result.Token // <-- ДОБАВЛЕНО: фронтенд ждет этот токен
         });
     }
 
@@ -38,13 +38,15 @@ public class AuthController : ControllerBase
 
         if (!result.Success)
             return BadRequest(new { error = result.Message });
-        else
-            return Ok(new
-            {
-                message = result.Message,
-                userId = result.User?.Id
-            });
+
+        return Ok(new
+        {
+            message = result.Message,
+            userId = result.User?.Id,
+            token = result.Token // <-- ДОБАВЛЕНО: фронтенд ждет этот токен
+        });
     }
+
     [HttpPost("change-password")]
     public async Task<IActionResult> ChangePassword(ChangePasswordRequest request)
     {
@@ -56,10 +58,8 @@ public class AuthController : ControllerBase
         return Ok(new
         {
             message = result.Message,
-            userId = result.User?.Id
-        }
-        );
+            userId = result.User?.Id,
+            token = result.Token // <-- ДОБАВЛЕНО
+        });
     }
 }
-
-

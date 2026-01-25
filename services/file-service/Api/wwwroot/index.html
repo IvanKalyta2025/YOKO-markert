@@ -76,7 +76,6 @@
                 src="https://via.placeholder.com/150"
                 class="avatar-preview"
               />
-
               <label for="avatarInput" class="upload-btn">📷 Endre bilde</label>
               <input
                 type="file"
@@ -108,10 +107,8 @@
                 />
               </div>
             </div>
-
             <button type="submit" class="primary-btn">Lagre profil</button>
           </form>
-
           <div class="toggle-links">
             <span class="link" onclick="showSection('login')">Logg ut</span>
           </div>
@@ -129,26 +126,30 @@
     </div>
 
     <script>
+      // Переключение между экранами
       function showSection(id) {
         document
           .querySelectorAll(".form-section, .visual-feedback")
           .forEach((el) => el.classList.remove("active"));
-        document.getElementById("mainCard").className = "card"; // Сброс цветов
+        document.getElementById("mainCard").className = "card";
         document.getElementById(id).classList.add("active");
+
+        if (id === "login") {
+          localStorage.removeItem("token"); // Удаляем токен при выходе
+        }
       }
 
-      // Превью картинки перед загрузкой (чистый JS)
+      // Предпросмотр фото
       function previewImage(input) {
         if (input.files && input.files[0]) {
           const reader = new FileReader();
-          reader.onload = function (e) {
-            document.getElementById("avatarPreview").src = e.target.result;
-          };
+          reader.onload = (e) =>
+            (document.getElementById("avatarPreview").src = e.target.result);
           reader.readAsDataURL(input.files[0]);
         }
       }
 
-      // Логика Входа/Регистрации
+      // Авторизация (Вход/Регистрация)
       async function handleAuth(event, url, type) {
         event.preventDefault();
         const data = Object.fromEntries(new FormData(event.target).entries());
@@ -160,57 +161,75 @@
             body: JSON.stringify(data),
           });
 
-          if (response.ok) {
-            // ЕСЛИ УСПЕХ -> ИДЕМ В ПРОФИЛЬ
-            // Тут в реальности нужно сохранить Токен, если он есть
-            showSection("profile");
+          const result = await response.json();
+          console.log("Результат от сервера:", result); // Посмотри в консоль F12, есть ли там token
 
-            // Если это был вход, попробуем подгрузить данные профиля (GET)
-            // loadProfileData();
+          const token = result.token || result.Token;
+
+          if (response.ok) {
+            if (token) {
+              // Если сервер дал токен (и при логине, и при регистрации)
+              localStorage.setItem("token", token);
+              showSection("profile");
+            } else if (type === "register") {
+              // Если это регистрация и сервер НЕ дал токен, но ответил 200 OK
+              // Мы всё равно идем в профиль, но предупреждаем
+              console.warn(
+                "Пользователь создан, но токен не получен. Сохранение может не сработать.",
+              );
+              showSection("profile");
+            }
           } else {
-            alert("Feil brukernavn eller passord"); // Простой алерт для скорости
+            alert(result.message || "Упс! Ошибка авторизации.");
           }
         } catch (e) {
-          console.error(e);
+          console.error("Критическая ошибка:", e);
+          alert("Serverfeil: Проверь консоль браузера.");
         }
       }
 
-      // Логика Обновления Профиля (С ФАЙЛОМ)
+      // Обновление профиля
       async function handleProfileUpdate(event) {
         event.preventDefault();
-        const formData = new FormData(event.target); // FormData сама соберет файл и тексты
+        const token = localStorage.getItem("token");
 
+        if (!token) {
+          alert("Du må logge inn!");
+          showSection("login");
+          return;
+        }
+
+        const formData = new FormData(event.target);
         const btn = event.target.querySelector("button");
-        btn.innerText = "Lagrer..."; // Сохранение...
+        btn.innerText = "Lagrer...";
 
         try {
-          // ВАЖНО: Не указываем Content-Type, браузер сам поставит multipart/form-data
+          // Путь /api/Profile соответствует твоему [Route("api/[controller]")]
           const response = await fetch("/api/Profile", {
             method: "POST",
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
             body: formData,
           });
 
           if (response.ok) {
-            const result = await response.json();
-
-            // Визуальный успех
             showSection("feedback");
             document.getElementById("mainCard").classList.add("success-state");
             document.getElementById("icon").innerText = "🎉";
             document.getElementById("feedTitle").innerText = "Profil Lagret!";
             document.getElementById("feedMessage").innerText =
               "Dine endringer er oppdatert.";
-
-            // Если вернулась новая ссылка на аватар, обновим её
-            if (result.data && result.data.avatarUrl) {
-              document.getElementById("avatarPreview").src =
-                result.data.avatarUrl;
-            }
+          } else if (response.status === 401) {
+            alert("Sesjonen er utløpt. Logg inn på nytt.");
+            showSection("login");
           } else {
-            throw new Error("Feil ved lagring");
+            console.error("Server error:", await response.text());
+            alert("Kunne ikke lagre profil.");
           }
         } catch (error) {
-          alert("Kunne ikke lagre profil. Er du logget inn?");
+          console.error("Profile error:", error);
+          alert("Serverfeil.");
         } finally {
           btn.innerText = "Lagre profil";
         }
