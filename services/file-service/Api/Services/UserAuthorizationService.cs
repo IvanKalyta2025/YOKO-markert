@@ -12,11 +12,13 @@ namespace Api.Services;
 public class UserAuthorizationService
 {
     private readonly IUserRepository _repository;
+    private readonly JwtTokenService _jwtTokenService;
 
 
-    public UserAuthorizationService(IUserRepository repository)
+    public UserAuthorizationService(IUserRepository repository, JwtTokenService jwtTokenService)
     {
         _repository = repository;
+        _jwtTokenService = jwtTokenService;
     }
 
     public async Task<AuthResult> RegisterAsync(RegisterRequest request)
@@ -37,7 +39,8 @@ public class UserAuthorizationService
         await _repository.AddAsync(user);
         await _repository.SaveChangesAsync();
 
-        return new AuthResult(true, "Registration successful.", user);
+        var token = _jwtTokenService.GenerateToken(user);
+        return new AuthResult(true, "Registration successful.", token, user);
     }
 
     public async Task<AuthResult> LoginAsync(LoginRequest request)
@@ -51,7 +54,8 @@ public class UserAuthorizationService
         if (!isPasswordValid)
             return new AuthResult(false, "Invalid password.");
 
-        return new AuthResult(true, "Login successful.", user);
+        var token = _jwtTokenService.GenerateToken(user);
+        return new AuthResult(true, "Login successful.", token, user);
     }
 
     public async Task<AuthResult> ChangePasswordAsync(ChangePasswordRequest request)
@@ -69,7 +73,8 @@ public class UserAuthorizationService
 
         await _repository.SaveChangesAsync();
 
-        return new AuthResult(true, "Change successful", user);
+        var token = _jwtTokenService.GenerateToken(user);
+        return new AuthResult(true, "Change successful", token, user);
     }
 
     // public record ChangePasswordRequest(string Email, string currentPassword, string newPassword);

@@ -173,3 +173,53 @@ button.primary-btn:hover {
   display: block;
   margin-bottom: 15px;
 }
+
+/* ... (Предыдущие стили остаются теми же) ... */
+
+/* --- СТИЛИ ДЛЯ ПРОФИЛЯ И АВАТАРКИ --- */
+
+.avatar-upload {
+  position: relative;
+  max-width: 150px;
+  margin: 0 auto 20px auto;
+  text-align: center;
+}
+
+.avatar-preview {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  border: 4px solid var(--primary-blue);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  object-fit: cover; /* Чтобы фото не сплющилось */
+  background-color: #e9ecef;
+  margin-bottom: 10px;
+}
+
+/* Скрываем стандартный инпут файла */
+.file-input {
+  display: none;
+}
+
+/* Красивая кнопка "Загрузить" */
+.upload-btn {
+  display: inline-block;
+  padding: 6px 12px;
+  background-color: var(--white);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  color: var(--text-main);
+}
+
+.upload-btn:hover {
+  background-color: var(--bg-light);
+  border-color: var(--primary-blue);
+}
+
+.form-row {
+  display: flex;
+  gap: 10px;
+}

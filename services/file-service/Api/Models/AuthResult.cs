@@ -5,5 +5,5 @@ using System.Threading.Tasks;
 
 namespace Api.Models
 {
-    public record AuthResult(bool Success, string Message, User? User = null);
+    public record AuthResult(bool Success, string Message, string Token = "", User? User = null);
 }
