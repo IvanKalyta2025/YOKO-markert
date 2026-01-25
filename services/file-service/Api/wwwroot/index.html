@@ -32,6 +32,9 @@
           <h1>Jobbmarked</h1>
           <p>Din karriere starter her</p>
         </div>
+        <div class="avatar-display" style="margin: 18px auto 0">
+          <img id="brand-avatar" src="default-avatar.png" alt="Avatar" />
+        </div>
 
         <!-- LOGIN -->
         <section id="login" class="form-section active">
@@ -313,6 +316,7 @@
 
             const avatarUrl = profile.avatarUrl || "default-avatar.png";
             document.getElementById("view-avatar").src = avatarUrl;
+            document.getElementById("brand-avatar").src = avatarUrl;
 
             document.getElementById("edit-firstname").value =
               profile.firstName || "";
