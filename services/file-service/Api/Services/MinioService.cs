@@ -58,7 +58,7 @@ namespace Api
             return $"http://file-service.localhost/{bucketName}/{objectName}";
         }
 
-        public async Task<(byte[]? Data, string? ContentType)> DownloadFileAsync(string bucketName, string objectName)
+        public async Task<(byte[] Data, string ContentType)> DownloadFileAsync(string bucketName, string objectName)
         {
             try
             {
@@ -67,9 +67,9 @@ namespace Api
                 var getObjectArgs = new GetObjectArgs()
                     .WithBucket(bucketName)
                     .WithObject(objectName)
-                    .WithCallbackStream(async (stream) =>
+                    .WithCallbackStream((stream) =>
                     {
-                        await stream.CopyToAsync(memoryStream);
+                        stream.CopyTo(memoryStream);
                     });
 
                 await _minioClient.GetObjectAsync(getObjectArgs).ConfigureAwait(false);
@@ -83,8 +83,9 @@ namespace Api
 
                 return (memoryStream.ToArray(), contentType);
             }
-            catch
+            catch (Exception ex)
             {
+                Console.WriteLine($"Error downloading file: {ex.Message}");
                 return (null, null);
             }
         }
