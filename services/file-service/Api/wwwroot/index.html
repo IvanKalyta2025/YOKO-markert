@@ -4,34 +4,49 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Jobbmarked - Min Profil</title>
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0"
+    />
     <link rel="stylesheet" href="style.css" />
   </head>
   <body>
+    <div class="background-shape"></div>
     <div class="container">
       <div class="card" id="mainCard">
+        <div class="brand-header">
+          <h1>Jobbmarked</h1>
+          <p>Din karriere starter her</p>
+        </div>
+
         <div id="login" class="form-section active">
           <h2>Velkommen tilbake</h2>
           <form onsubmit="handleAuth(event, '/Auth/login', 'login')">
             <div class="input-group">
-              <label>E-postadresse</label>
+              <span class="material-symbols-outlined input-icon">mail</span>
               <input
                 type="email"
                 name="email"
                 required
-                placeholder="din@epost.no"
+                placeholder="E-postadresse"
               />
             </div>
             <div class="input-group">
-              <label>Passord</label>
-              <input type="password" name="password" required />
+              <span class="material-symbols-outlined input-icon">lock</span>
+              <input
+                type="password"
+                name="password"
+                required
+                placeholder="Passord"
+              />
             </div>
             <button type="submit" class="primary-btn">Logg inn</button>
           </form>
           <div class="toggle-links">
             <p>
-              Ny bruker?
+              Har du ikke konto?
               <span class="link" onclick="showSection('register')"
-                >Opprett konto</span
+                >Opprett ny bruker</span
               >
             </p>
           </div>
@@ -41,18 +56,28 @@
           <h2>Opprett konto</h2>
           <form onsubmit="handleAuth(event, '/Auth/register', 'register')">
             <div class="input-group">
-              <label>E-postadresse</label>
-              <input type="email" name="email" required />
+              <span class="material-symbols-outlined input-icon">mail</span>
+              <input
+                type="email"
+                name="email"
+                required
+                placeholder="E-postadresse"
+              />
             </div>
             <div class="input-group">
-              <label>Passord</label>
-              <input type="password" name="password" required />
+              <span class="material-symbols-outlined input-icon">lock</span>
+              <input
+                type="password"
+                name="password"
+                required
+                placeholder="Passord"
+              />
             </div>
             <button type="submit" class="primary-btn">Registrer deg</button>
           </form>
           <div class="toggle-links">
             <p>
-              Har du уже konto?
+              Har du allerede konto?
               <span class="link" onclick="showSection('login')">Logg inn</span>
             </p>
           </div>
@@ -60,17 +85,15 @@
 
         <div id="profile-view" class="form-section">
           <div class="profile-header">
-            <img
-              id="view-avatar"
-              src="default-avatar.png"
-              alt="Avatar"
-              class="avatar-large"
-            />
+            <div class="avatar-display">
+              <img id="view-avatar" src="default-avatar.png" alt="Avatar" />
+            </div>
             <h2 id="view-fullname">Laster...</h2>
+            <p class="role-badge">Bruker</p>
           </div>
           <div class="profile-actions">
-            <button class="secondary-btn" onclick="showSection('profile-edit')">
-              Rediger profil
+            <button class="primary-btn" onclick="showSection('profile-edit')">
+              <span class="material-symbols-outlined">edit</span> Rediger profil
             </button>
             <button class="outline-btn" onclick="logout()">Logg ut</button>
           </div>
@@ -79,20 +102,49 @@
         <div id="profile-edit" class="form-section">
           <h2>Rediger profil</h2>
           <form onsubmit="handleProfileUpdate(event)">
+            <div
+              class="avatar-upload-container"
+              onclick="document.getElementById('avatar-input').click()"
+            >
+              <img
+                id="edit-avatar-preview"
+                src="default-avatar.png"
+                alt="Preview"
+              />
+              <div class="avatar-overlay">
+                <span class="material-symbols-outlined">photo_camera</span>
+              </div>
+              <input
+                type="file"
+                name="Avatar"
+                id="avatar-input"
+                accept="image/*"
+                hidden
+                onchange="previewImage(this)"
+              />
+            </div>
+            <p class="hint-text">Trykk på bildet for å endre</p>
+
             <div class="input-group">
               <label>Fornavn</label>
-              <input type="text" name="FirstName" id="edit-firstname" />
+              <input
+                type="text"
+                name="FirstName"
+                id="edit-firstname"
+                placeholder="Ola"
+              />
             </div>
             <div class="input-group">
               <label>Etternavn</label>
-              <input type="text" name="LastName" id="edit-lastname" />
+              <input
+                type="text"
+                name="LastName"
+                id="edit-lastname"
+                placeholder="Nordmann"
+              />
             </div>
-            <div class="input-group">
-              <label>Profilbilde</label>
-              <input type="file" name="Avatar" accept="image/*" />
-            </div>
+
             <div class="button-row">
-              <button type="submit" class="primary-btn">Lagre profil</button>
               <button
                 type="button"
                 class="outline-btn"
@@ -100,6 +152,7 @@
               >
                 Avbryt
               </button>
+              <button type="submit" class="primary-btn">Lagre endringer</button>
             </div>
           </form>
         </div>
@@ -107,46 +160,94 @@
     </div>
 
     <script>
+      /* --- UI Логика --- */
       function showSection(id) {
-        document
-          .querySelectorAll(".form-section")
-          .forEach((s) => s.classList.remove("active"));
+        document.querySelectorAll(".form-section").forEach((s) => {
+          s.classList.remove("active");
+          s.style.display = "none"; // Скрываем полностью для анимации
+        });
         const target = document.getElementById(id);
-        if (target) target.classList.add("active");
+        if (target) {
+          target.style.display = "flex";
+          // Небольшая задержка для запуска CSS анимации
+          setTimeout(() => target.classList.add("active"), 10);
+        }
       }
 
+      function previewImage(input) {
+        if (input.files && input.files[0]) {
+          const reader = new FileReader();
+          reader.onload = function (e) {
+            document.getElementById("edit-avatar-preview").src =
+              e.target.result;
+          };
+          reader.readAsDataURL(input.files[0]);
+        }
+      }
+
+      /* --- Логика Авторизации --- */
       async function handleAuth(event, url, type) {
         event.preventDefault();
-        const data = Object.fromEntries(new FormData(event.target).entries());
+        // Собираем данные формы в объект
+        const formData = new FormData(event.target);
+        const data = Object.fromEntries(formData.entries());
 
         try {
+          // 1. Основной запрос (Login или Register)
           const response = await fetch(url, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(data),
           });
 
-          if (response.ok) {
-            if (type === "register") {
-              alert("Bruker opprettet! Logg inn nå.");
-              showSection("login");
-              return;
-            }
-
-            const result = await response.json();
-            const token = result.token || result.Token;
-
-            if (token) {
-              localStorage.setItem("token", token);
-              await loadProfileData();
-            }
-          } else {
-            const errorText = await response.text();
+          if (!response.ok) {
+            const errorText = await response.text().catch(() => "Ukjent feil");
             alert("Feil: " + errorText);
+            return;
+          }
+
+          // 2. Логика успеха
+          if (type === "register") {
+            // АВТО-ЛОГИН: Сразу вызываем вход с теми же данными
+            await performAutoLogin(data.email, data.password);
+          } else {
+            // Обычный вход
+            const result = await response.json();
+            processLoginSuccess(result);
           }
         } catch (e) {
           console.error(e);
-          alert("Serverfeil или проблема с JSON");
+          alert("Kunne ikke koble til serveren.");
+        }
+      }
+
+      // Функция для автоматического входа после регистрации
+      async function performAutoLogin(email, password) {
+        try {
+          const response = await fetch("/Auth/login", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ email, password }),
+          });
+
+          if (response.ok) {
+            const result = await response.json();
+            processLoginSuccess(result);
+          } else {
+            // Если авто-вход не сработал, кидаем на логин
+            alert("Konto opprettet! Vennligst logg inn.");
+            showSection("login");
+          }
+        } catch (e) {
+          showSection("login");
+        }
+      }
+
+      function processLoginSuccess(result) {
+        const token = result.token || result.Token;
+        if (token) {
+          localStorage.setItem("token", token);
+          loadProfileData();
         }
       }
 
@@ -164,26 +265,31 @@
 
           if (response.ok) {
             const profile = await response.json();
+            // Заполняем просмотр
             document.getElementById("view-fullname").innerText =
               `${profile.firstName || ""} ${profile.lastName || ""}`.trim() ||
-              "Navn ikke satt";
-            document.getElementById("view-avatar").src =
-              profile.avatarUrl || "default-avatar.png";
+              "Ukjent Bruker";
 
+            const avatarUrl = profile.avatarUrl || "default-avatar.png";
+            document.getElementById("view-avatar").src = avatarUrl;
+
+            // Заполняем форму редактирования (и превью там же)
             document.getElementById("edit-firstname").value =
               profile.firstName || "";
             document.getElementById("edit-lastname").value =
               profile.lastName || "";
+            document.getElementById("edit-avatar-preview").src = avatarUrl;
 
             showSection("profile-view");
           } else if (response.status === 404) {
+            // Профиля нет -> сразу на редактирование
             showSection("profile-edit");
           } else {
             logout();
           }
         } catch (error) {
           console.error(error);
-          showSection("profile-edit");
+          showSection("login");
         }
       }
 
@@ -191,8 +297,11 @@
         event.preventDefault();
         const token = localStorage.getItem("token");
         const formData = new FormData(event.target);
-        const btn = event.target.querySelector("button");
+        const btn = event.target.querySelector("button[type='submit']");
+        const originalText = btn.innerText;
+
         btn.innerText = "Lagrer...";
+        btn.disabled = true;
 
         try {
           const response = await fetch("/api/Profile", {
@@ -209,7 +318,8 @@
         } catch (error) {
           alert("Serverfeil.");
         } finally {
-          btn.innerText = "Lagre profil";
+          btn.innerText = originalText;
+          btn.disabled = false;
         }
       }
 
@@ -219,7 +329,12 @@
       }
 
       window.onload = () => {
-        if (localStorage.getItem("token")) loadProfileData();
+        // Проверяем токен при загрузке
+        if (localStorage.getItem("token")) {
+          loadProfileData();
+        } else {
+          showSection("login");
+        }
       };
     </script>
   </body>

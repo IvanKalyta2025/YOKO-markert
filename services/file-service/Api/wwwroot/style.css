@@ -1,225 +1,281 @@
 :root {
-  --primary-blue: #0056b3;
-  --primary-hover: #004494;
-  --success-green: #28a745;
-  --error-red: #dc3545;
-  --bg-light: #f4f6f8;
-  --white: #ffffff;
-  --text-main: #2c3e50;
-  --text-muted: #6c757d;
-  --border: #dee2e6;
+  --primary: #2563eb; /* Насыщенный синий */
+  --primary-hover: #1d4ed8;
+  --bg-gradient: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%);
+  --card-bg: #ffffff;
+  --text-main: #1f2937;
+  --text-muted: #6b7280;
+  --border: #e5e7eb;
+  --input-bg: #f9fafb;
+  --radius: 12px;
+  --shadow:
+    0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: "Segoe UI", system-ui, sans-serif;
 }
 
 body {
-  background-color: var(--bg-light);
-  color: var(--text-main);
-  font-family:
-    -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial,
-    sans-serif;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  background: var(--bg-gradient);
   min-height: 100vh;
-  margin: 0;
-  padding: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-main);
+  overflow-x: hidden;
+}
+
+/* Фоновая декорация */
+.background-shape {
+  position: absolute;
+  width: 100%;
+  height: 50vh;
+  background: #2563eb;
+  top: 0;
+  left: 0;
+  z-index: -1;
+  clip-path: polygon(0 0, 100% 0, 100% 70%, 0 100%);
 }
 
 .container {
   width: 100%;
-  max-width: 400px;
+  max-width: 420px;
+  padding: 20px;
 }
 
 .card {
-  background-color: var(--white);
-  padding: 40px;
-  border-radius: 12px;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
-  border: 2px solid transparent; /* Место для рамки статуса */
-  transition: all 0.3s ease;
-  position: relative;
-}
-
-/* --- ВАЖНАЯ ЧАСТЬ: СКРЫТИЕ И ПОКАЗ --- */
-
-/* По умолчанию скрываем ВСЕ секции */
-.form-section,
-.visual-feedback {
-  display: none;
-  opacity: 0;
-  transition: opacity 0.3s ease;
-}
-
-/* Показываем только ту, у которой есть класс active */
-.form-section.active,
-.visual-feedback.active {
-  display: block;
-  animation: fadeIn 0.4s forwards;
-}
-
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(5px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-/* --- СТАТУСЫ КАРТОЧКИ --- */
-.card.success-state {
-  border-color: var(--success-green);
-  background-color: #f0fff4;
-}
-
-.card.error-state {
-  border-color: var(--error-red);
-  animation: shake 0.4s;
-}
-
-@keyframes shake {
-  0%,
-  100% {
-    transform: translateX(0);
-  }
-  25% {
-    transform: translateX(-5px);
-  }
-  75% {
-    transform: translateX(5px);
-  }
-}
-
-/* --- ОСТАЛЬНЫЕ СТИЛИ --- */
-h2 {
-  margin-top: 0;
-  color: var(--primary-blue);
+  background: var(--card-bg);
+  padding: 40px 30px;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
   text-align: center;
-  font-size: 1.5rem;
-  margin-bottom: 25px;
 }
 
-.input-group {
-  margin-bottom: 15px;
+.brand-header {
+  margin-bottom: 30px;
 }
-
-label {
-  display: block;
-  margin-bottom: 6px;
-  font-weight: 500;
-  color: var(--text-main);
+.brand-header h1 {
+  color: #2563eb;
+  font-size: 2rem;
+  font-weight: 800;
 }
-
-input {
-  width: 100%;
-  padding: 12px;
-  border: 1px solid var(--border);
-  border-radius: 6px;
-  font-size: 1rem;
-  box-sizing: border-box; /* Чтобы padding не ломал ширину */
-}
-
-input:focus {
-  outline: none;
-  border-color: var(--primary-blue);
-  box-shadow: 0 0 0 3px rgba(0, 86, 179, 0.1);
-}
-
-button.primary-btn {
-  width: 100%;
-  padding: 12px;
-  background-color: var(--primary-blue);
-  color: white;
-  border: none;
-  border-radius: 6px;
-  font-weight: 600;
-  cursor: pointer;
-  font-size: 1rem;
-  margin-top: 15px;
-  transition: background 0.2s;
-}
-
-button.primary-btn:hover {
-  background-color: var(--primary-hover);
-}
-
-/* Ссылки-переключатели */
-.toggle-links {
-  margin-top: 25px;
-  text-align: center;
-  font-size: 0.9rem;
+.brand-header p {
   color: var(--text-muted);
 }
 
-.link {
-  color: var(--primary-blue);
-  cursor: pointer;
-  text-decoration: none;
-  font-weight: 500;
+.form-section {
+  display: none; /* Скрыто по умолчанию */
+  flex-direction: column;
+  gap: 20px;
+  opacity: 0;
+  transform: translateY(10px);
+  transition:
+    opacity 0.3s ease,
+    transform 0.3s ease;
 }
 
+.form-section.active {
+  display: flex; /* Flex чтобы работали gap */
+  opacity: 1;
+  transform: translateY(0);
+}
+
+h2 {
+  font-size: 1.5rem;
+  margin-bottom: 5px;
+  color: var(--text-main);
+}
+
+/* Инпуты */
+.input-group {
+  position: relative;
+  text-align: left;
+}
+
+.input-group label {
+  display: block;
+  margin-bottom: 6px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--text-main);
+}
+
+.input-group input {
+  width: 100%;
+  padding: 12px 12px 12px 40px; /* Отступ под иконку */
+  border: 2px solid var(--border);
+  border-radius: 8px;
+  background: var(--input-bg);
+  font-size: 1rem;
+  transition: all 0.2s;
+}
+
+.input-group .input-icon {
+  position: absolute;
+  left: 12px;
+  top: 50%; /* Центр */
+  transform: translateY(-50%); /* Точная центровка */
+  color: var(--text-muted);
+  font-size: 20px;
+  pointer-events: none;
+}
+/* Если есть label, иконку нужно опустить чуть ниже */
+.input-group label + .input-icon {
+  top: 42px;
+}
+.input-group label + input {
+  /* Если есть лейбл, иконка не нужна внутри инпута, или настроим иначе. 
+       В моем HTML выше я использовал иконки без лейблов в логине. */
+}
+
+.input-group input:focus {
+  border-color: var(--primary);
+  outline: none;
+  background: #fff;
+}
+
+/* Кнопки */
+button {
+  width: 100%;
+  padding: 12px;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.primary-btn {
+  background: var(--primary);
+  color: white;
+  border: none;
+}
+.primary-btn:hover {
+  background: var(--primary-hover);
+  transform: translateY(-1px);
+}
+.primary-btn:disabled {
+  opacity: 0.7;
+  cursor: wait;
+}
+
+.secondary-btn {
+  background: #f3f4f6;
+  color: var(--text-main);
+  border: none;
+}
+.secondary-btn:hover {
+  background: #e5e7eb;
+}
+
+.outline-btn {
+  background: transparent;
+  border: 2px solid var(--border);
+  color: var(--text-muted);
+}
+.outline-btn:hover {
+  border-color: var(--text-muted);
+  color: var(--text-main);
+}
+
+.button-row {
+  display: flex;
+  gap: 10px;
+}
+
+/* Ссылки */
+.toggle-links {
+  margin-top: 10px;
+  font-size: 0.9rem;
+  color: var(--text-muted);
+}
+.link {
+  color: var(--primary);
+  font-weight: 600;
+  cursor: pointer;
+}
 .link:hover {
   text-decoration: underline;
 }
 
-/* Блок результата */
-.visual-feedback {
-  text-align: center;
-  padding: 20px 0;
+/* --- АВАТАР (Красивая загрузка) --- */
+.avatar-display {
+  margin: 0 auto 15px;
+  width: 100px;
+  height: 100px;
 }
-.icon {
-  font-size: 3rem;
-  display: block;
-  margin-bottom: 15px;
+.avatar-display img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+  border: 3px solid white;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 
-/* ... (Предыдущие стили остаются теми же) ... */
-
-/* --- СТИЛИ ДЛЯ ПРОФИЛЯ И АВАТАРКИ --- */
-
-.avatar-upload {
+.avatar-upload-container {
   position: relative;
-  max-width: 150px;
-  margin: 0 auto 20px auto;
-  text-align: center;
-}
-
-.avatar-preview {
   width: 120px;
   height: 120px;
-  border-radius: 50%;
-  border: 4px solid var(--primary-blue);
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-  object-fit: cover; /* Чтобы фото не сплющилось */
-  background-color: #e9ecef;
-  margin-bottom: 10px;
-}
-
-/* Скрываем стандартный инпут файла */
-.file-input {
-  display: none;
-}
-
-/* Красивая кнопка "Загрузить" */
-.upload-btn {
-  display: inline-block;
-  padding: 6px 12px;
-  background-color: var(--white);
-  border: 1px solid var(--border);
-  border-radius: 20px;
-  font-size: 0.85rem;
+  margin: 0 auto 10px;
   cursor: pointer;
-  transition: all 0.2s;
-  color: var(--text-main);
+  border-radius: 50%;
+  overflow: hidden;
+  border: 3px solid #e5e7eb;
+  transition: border-color 0.3s;
+}
+.avatar-upload-container:hover {
+  border-color: var(--primary);
 }
 
-.upload-btn:hover {
-  background-color: var(--bg-light);
-  border-color: var(--primary-blue);
+.avatar-upload-container img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
-.form-row {
+.avatar-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.4);
   display: flex;
-  gap: 10px;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+.avatar-overlay span {
+  color: white;
+  font-size: 32px;
+}
+.avatar-upload-container:hover .avatar-overlay {
+  opacity: 1;
+}
+
+.hint-text {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  margin-bottom: 20px;
+}
+
+.role-badge {
+  background: #e0e7ff;
+  color: #3730a3;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  display: inline-block;
+  margin-top: 5px;
 }
