@@ -32,6 +32,12 @@
           <h1>Jobbmarked</h1>
           <p>Din karriere starter her</p>
 
+          <!-- Avatar in header -->
+          <div class="avatar-display" style="margin: 18px auto 0">
+            <img id="brand-avatar" src="default-avatar.png" alt="Avatar" />
+          </div>
+        </div>
+
         <!-- LOGIN -->
         <section id="login" class="form-section active">
           <h2>Velkommen tilbake</h2>
@@ -206,7 +212,6 @@
     </main>
 
     <script>
-      /* --- UI логика --- */
       function showSection(id) {
         document.querySelectorAll(".form-section").forEach((s) => {
           s.classList.remove("active");
@@ -231,7 +236,6 @@
         }
       }
 
-      /* --- Логика авторизации --- */
       async function handleAuth(event, url, type) {
         event.preventDefault();
 
@@ -312,7 +316,9 @@
 
             const avatarUrl = profile.avatarUrl || "default-avatar.png";
             document.getElementById("view-avatar").src = avatarUrl;
-            document.getElementById("brand-avatar").src = avatarUrl;
+
+            const brandAvatar = document.getElementById("brand-avatar");
+            if (brandAvatar) brandAvatar.src = avatarUrl;
 
             document.getElementById("edit-firstname").value =
               profile.firstName || "";
@@ -354,7 +360,8 @@
           if (response.ok) {
             await loadProfileData();
           } else {
-            alert("Kunne ikke lagre profil.");
+            const err = await response.text().catch(() => "");
+            alert(`Kunne ikke lagre profil. (${response.status}) ${err}`);
           }
         } catch (error) {
           alert("Serverfeil.");
