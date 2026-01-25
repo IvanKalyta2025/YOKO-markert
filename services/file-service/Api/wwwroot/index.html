@@ -283,7 +283,8 @@
     </main>
 
     <script>
-      const AVATAR_CACHE_KEY = "avatar_preview";
+      // cache is per-email now (prevents avatar leaking between accounts)
+      const LAST_EMAIL_KEY = "last_email";
       let initialRenderDone = false;
 
       function endInitialRender() {
@@ -307,6 +308,54 @@
         endInitialRender();
       }
 
+      function getCurrentEmail() {
+        return (localStorage.getItem(LAST_EMAIL_KEY) || "")
+          .trim()
+          .toLowerCase();
+      }
+
+      function avatarKeyForEmail(email) {
+        const safe = (email || "").trim().toLowerCase();
+        return safe ? `avatar_preview:${safe}` : null;
+      }
+
+      function setAvatarEverywhere(src) {
+        if (!src) return;
+        const view = document.getElementById("view-avatar");
+        const edit = document.getElementById("edit-avatar-preview");
+        if (view) view.src = src;
+        if (edit) edit.src = src;
+      }
+
+      function applyCachedAvatarForEmail(email) {
+        const key = avatarKeyForEmail(email);
+        if (!key) return;
+        const cached = localStorage.getItem(key);
+        if (cached) setAvatarEverywhere(cached);
+      }
+
+      function cacheAvatarForEmail(email, src) {
+        const key = avatarKeyForEmail(email);
+        if (!key || !src) return;
+        localStorage.setItem(key, src);
+      }
+
+      function clearAvatarCacheForEmail(email) {
+        const key = avatarKeyForEmail(email);
+        if (!key) return;
+        localStorage.removeItem(key);
+      }
+
+      function clearAllAvatarCaches() {
+        // safety: remove any avatar_preview:* keys
+        for (let i = localStorage.length - 1; i >= 0; i--) {
+          const k = localStorage.key(i);
+          if (k && k.startsWith("avatar_preview:")) {
+            localStorage.removeItem(k);
+          }
+        }
+      }
+
       function previewImage(input) {
         if (input.files && input.files[0]) {
           const reader = new FileReader();
@@ -318,24 +367,14 @@
         }
       }
 
-      function setAvatarEverywhere(src) {
-        if (!src) return;
-        const view = document.getElementById("view-avatar");
-        const edit = document.getElementById("edit-avatar-preview");
-        if (view) view.src = src;
-        if (edit) edit.src = src;
-      }
-
-      function applyCachedAvatarIfAny() {
-        const cached = localStorage.getItem(AVATAR_CACHE_KEY);
-        if (cached) setAvatarEverywhere(cached);
-      }
-
       async function handleAuth(event, url, type) {
         event.preventDefault();
 
         const formData = new FormData(event.target);
         const data = Object.fromEntries(formData.entries());
+
+        // remember which user is currently logging in/registering
+        if (data.email) localStorage.setItem(LAST_EMAIL_KEY, data.email);
 
         try {
           const response = await fetch(url, {
@@ -386,6 +425,10 @@
         const token = result.token || result.Token;
         if (token) {
           localStorage.setItem("token", token);
+
+          // after login, apply cached avatar for this email (if any)
+          applyCachedAvatarForEmail(getCurrentEmail());
+
           loadProfileData();
         }
       }
@@ -397,8 +440,7 @@
           return;
         }
 
-        // show cached avatar immediately (prevents default on refresh)
-        applyCachedAvatarIfAny();
+        const email = getCurrentEmail();
 
         try {
           const response = await fetch("/api/Profile", {
@@ -412,7 +454,7 @@
               `${profile.firstName || ""} ${profile.lastName || ""}`.trim() ||
               "Ukjent Bruker";
 
-            // If server gives avatarUrl, use it and cache it
+            // If server gives avatarUrl, use it and cache it for THIS email
             const serverAvatar = profile.avatarUrl || "";
             if (serverAvatar && serverAvatar !== "default-avatar.png") {
               const busted =
@@ -422,7 +464,10 @@
                 Date.now();
 
               setAvatarEverywhere(busted);
-              localStorage.setItem(AVATAR_CACHE_KEY, busted);
+              cacheAvatarForEmail(email, busted);
+            } else {
+              // no avatarUrl from server -> fallback to cached avatar for THIS email only
+              applyCachedAvatarForEmail(email);
             }
 
             document.getElementById("edit-firstname").value =
@@ -447,6 +492,7 @@
 
         const token = localStorage.getItem("token");
         const formData = new FormData(event.target);
+        const email = getCurrentEmail();
 
         const btn = event.target.querySelector("button[type='submit']");
         const originalText = btn.innerText;
@@ -462,13 +508,13 @@
           });
 
           if (response.ok) {
-            // show new avatar immediately + cache (so refresh doesn't revert)
+            // show new avatar immediately + cache for this email
             const previewSrc = document.getElementById(
               "edit-avatar-preview",
             ).src;
 
             setAvatarEverywhere(previewSrc);
-            localStorage.setItem(AVATAR_CACHE_KEY, previewSrc);
+            cacheAvatarForEmail(email, previewSrc);
 
             await loadProfileData();
           } else {
@@ -538,7 +584,6 @@
 
               if (resp.ok) {
                 alert("Passord endret!");
-                // clear fields
                 document.getElementById("current-password").value = "";
                 document.getElementById("new-password").value = "";
                 document.getElementById("confirm-password").value = "";
@@ -561,14 +606,24 @@
       }
 
       function logout() {
+        const email = getCurrentEmail();
+
         localStorage.removeItem("token");
+        localStorage.removeItem(LAST_EMAIL_KEY);
+
+        // IMPORTANT: remove cached avatar for the current user (prevents leaking to other accounts)
+        if (email) clearAvatarCacheForEmail(email);
+        // (optional safety) if you want: clearAllAvatarCaches();
+
+        // reset UI images to default
+        setAvatarEverywhere("default-avatar.png");
+
         showSection("login");
       }
 
       window.onload = () => {
-        applyCachedAvatarIfAny();
-
         if (localStorage.getItem("token")) {
+          // DO NOT apply cached avatar here (prevents cross-account flash)
           loadProfileData();
         } else {
           showSection("login");
