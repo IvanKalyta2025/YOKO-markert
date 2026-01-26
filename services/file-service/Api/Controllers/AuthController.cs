@@ -59,7 +59,7 @@ public class AuthController : ControllerBase
         {
             message = result.Message,
             userId = result.User?.Id,
-            token = result.Token // <-- ДОБАВЛЕНО
+            token = result.Token
         });
     }
 }
