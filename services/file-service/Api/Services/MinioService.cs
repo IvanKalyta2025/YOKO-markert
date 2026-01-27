@@ -68,37 +68,37 @@ namespace Api
             return $"/{bucketName}/{objectName}";
         }
 
-        public async Task<(byte[] Data, string ContentType)> DownloadFileAsync(string bucketName, string objectName)
+        public async Task<string?> DownloadFileAsync(string bucketName, string objectName, Stream destinationStream)
         {
             bucketName = string.IsNullOrWhiteSpace(bucketName) ? _defaultBucketName : bucketName;
 
             try
             {
-                using var memoryStream = new MemoryStream();
+                // using var memoryStream = new MemoryStream();
 
                 var getObjectArgs = new GetObjectArgs()
                     .WithBucket(bucketName)
                     .WithObject(objectName)
                     .WithCallbackStream((stream) =>
                     {
-                        stream.CopyTo(memoryStream);
+                        stream.CopyTo(destinationStream);
                     });
 
                 await _minioClient.GetObjectAsync(getObjectArgs).ConfigureAwait(false);
 
-                if (memoryStream.Length == 0) return (null, null);
+                // if (destinationStream.Length == 0) return null;
 
                 if (!_contentTypeProvider.TryGetContentType(objectName, out string contentType))
                 {
                     contentType = "application/octet-stream";
                 }
 
-                return (memoryStream.ToArray(), contentType);
+                return contentType;
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"Error downloading file: {ex.Message}");
-                return (null, null);
+                return null;
             }
         }
     }
