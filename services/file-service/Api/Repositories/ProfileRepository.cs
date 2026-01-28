@@ -37,11 +37,8 @@ namespace Api.Repositories
 
         public async Task UploadFileAsync(string objectName, Stream fileData)
         {
-            using var ms = new MemoryStream();
-            await fileData.CopyToAsync(ms);
-            byte[] bytes = ms.ToArray();
 
-            await _fileService.UploadFileAsync(_fileService.DefaultBucketName, objectName, bytes);
+            await _fileService.UploadFileAsync(_fileService.DefaultBucketName, objectName, fileData);
         }
     }
 }
