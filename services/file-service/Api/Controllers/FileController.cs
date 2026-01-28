@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.ResponseCompression;
 
 
 //локальный контроллер для minio
@@ -25,13 +26,9 @@ namespace Api
             if (file == null || file.Length == 0)
                 return BadRequest("File not selected");
 
-            using var memoryStream = new MemoryStream();
-            await file.CopyToAsync(memoryStream);
-            var fileData = memoryStream.ToArray();
-
             string bucketName = _fileService.DefaultBucketName;
 
-            await _fileService.UploadFileAsync(bucketName, file.FileName, fileData);
+            await _fileService.UploadFileAsync(bucketName, file.FileName, file.OpenReadStream());
 
             return Ok($"File {file.FileName} uploaded successfully!");
         }
@@ -39,23 +36,12 @@ namespace Api
         [HttpGet("download/{fileName}")]
         public async Task<IActionResult> Download(string fileName)
         {
-            if (string.IsNullOrEmpty(fileName))
-                return BadRequest("File name is required.");
+            Response.Headers.Append("Content-Disposition", $"attachment; filename=\"{fileName}\"");
+            Response.ContentType = _fileService.GetContentType(fileName);
+            await _fileService.DownloadFileAsync(_fileService.DefaultBucketName, fileName, Response.Body);
 
-            string bucketName = _fileService.DefaultBucketName;
-
-            var (fileData, contentType) = await _fileService.DownloadFileAsync(bucketName, fileName);
-
-            if (fileData == null)
-            {
-                return NotFound($"File '{fileName}' was not found.");
-            }
-            var fileResult = new FileContentResult(fileData, contentType)
-            {
-                FileDownloadName = fileName
-            };
-            return fileResult;
-
+            return new EmptyResult();
         }
     }
 }
+

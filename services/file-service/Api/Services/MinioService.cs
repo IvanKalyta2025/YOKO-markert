@@ -11,8 +11,9 @@ namespace Api
     public class MinioService
     {
         private readonly IMinioClient _minioClient;
-        private readonly FileExtensionContentTypeProvider _contentTypeProvider;
+        private readonly FileExtensionContentTypeProvider _contentTypeProvider; // Content type provider for file extensions
         private readonly string _defaultBucketName;
+
         //private static readonly Regex SafeNameRegex = new(@"^[a-zA-Z0-9_\-\.]+$", RegexOptions.Compiled); // Regex for safe object names
         //https://www.geeksforgeeks.org/c-sharp/what-is-regular-expression-in-c-sharp/
 
@@ -74,8 +75,6 @@ namespace Api
 
             try
             {
-                // using var memoryStream = new MemoryStream();
-
                 var getObjectArgs = new GetObjectArgs()
                     .WithBucket(bucketName)
                     .WithObject(objectName)
@@ -85,8 +84,6 @@ namespace Api
                     });
 
                 await _minioClient.GetObjectAsync(getObjectArgs).ConfigureAwait(false);
-
-                // if (destinationStream.Length == 0) return null;
 
                 if (!_contentTypeProvider.TryGetContentType(objectName, out string contentType))
                 {
@@ -100,6 +97,14 @@ namespace Api
                 Console.WriteLine($"Error downloading file: {ex.Message}");
                 return null;
             }
+        }
+        public string GetContentType(string objectName)
+        {
+            if (!_contentTypeProvider.TryGetContentType(objectName, out string contentType))
+            {
+                contentType = "application/octet-stream";
+            }
+            return contentType;
         }
     }
 }
