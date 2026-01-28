@@ -11,7 +11,7 @@ namespace Api
     public class FileController : ControllerBase
     {
         private readonly MinioService _fileService;
-        private const long MaxFileSize = 10 * 1024 * 1024; // 10 MB limit
+        private const long MaxFileSize = 10 * 1024 * 1024;
         private readonly string[] _permittedExtensions = { ".jpg", ".jpeg", ".png", ".gif", ".pdf" };
 
         public FileController(MinioService fileService)
@@ -32,7 +32,6 @@ namespace Api
             if (string.IsNullOrEmpty(extension) || !((IList<string>)_permittedExtensions).Contains(extension))
                 return BadRequest("Недопустимый тип файла.");
 
-            // Нормализация имени файла для предотвращения Path Traversal и ошибок MinIO
             var safeFileName = Path.GetFileName(file.FileName);
             string bucketName = _fileService.DefaultBucketName;
 
@@ -48,21 +47,16 @@ namespace Api
         [HttpGet("download/{fileName}")]
         public async Task<IActionResult> Download(string fileName)
         {
-            // Санитарная проверка имени файла
             var safeFileName = Path.GetFileName(fileName);
 
-            // Устанавливаем ContentType заранее, если это возможно
             Response.ContentType = _fileService.GetContentType(safeFileName);
             Response.Headers.Append("Content-Disposition", $"inline; filename=\"{safeFileName}\"");
 
-            // Проверяем результат скачивания. Если MinIO не нашел файл, сервис вернет null.
             var result = await _fileService.DownloadFileAsync(_fileService.DefaultBucketName, safeFileName, Response.Body);
 
             if (result == null)
             {
-                // Если файл не найден, мы не можем вернуть NotFound через IActionResult, 
-                // так как заголовки уже могут быть частично отправлены.
-                // Однако, в данном потоковом подходе это критическая точка.
+
                 return NotFound("Файл не найден в хранилище.");
             }
 
