@@ -9,6 +9,11 @@ namespace Api.Models
     {
         public string FirstName { get; set; } = string.Empty;
         public string LastName { get; set; } = string.Empty;
+
+        public int Age { get; set; } = 0; //update to version 2.1
+        public string Gender { get; set; } = string.Empty; //update to version 2.1
+        public string Hobby { get; set; } = string.Empty; //update to version 2.1
+        public string MyPlaceOfBirth { get; set; } = string.Empty; //update to version 2.1
         public IFormFile? AvatarFile { get; set; } = null!;
     }
 }
