@@ -30,6 +30,22 @@ namespace Api.Migrations
                     b.Property<Guid>("UserId")
                         .HasColumnType("uuid");
 
+                    b.Property<int>("Age")
+                        .IsRequired()
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Gender")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Hobby")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("MyPlaceOfBirth")
+                        .IsRequired()
+                        .HasColumnType("text");
+
                     b.Property<string>("AvatarUrl")
                         .IsRequired()
                         .HasColumnType("text");

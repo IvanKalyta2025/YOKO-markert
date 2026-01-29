@@ -39,6 +39,22 @@ namespace Api.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<int>("Age")
+                        .IsRequired()
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Gender")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Hobby")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("MyPlaceOfBirth")
+                        .IsRequired()
+                        .HasColumnType("text");
+
                     b.HasKey("UserId");
 
                     b.ToTable("Profiles");

@@ -31,6 +31,10 @@ namespace Api.Migrations
                     UserId = table.Column<Guid>(type: "uuid", nullable: false),
                     LastName = table.Column<string>(type: "text", nullable: false),
                     FirstName = table.Column<string>(type: "text", nullable: false),
+                    Age = table.Column<int>(type: "integer", nullable: false),
+                    Gender = table.Column<string>(type: "text", nullable: false),
+                    Hobby = table.Column<string>(type: "text", nullable: false),
+                    MyPlaceOfBirth = table.Column<string>(type: "text", nullable: false),
                     AvatarUrl = table.Column<string>(type: "text", nullable: false)
                 },
                 constraints: table =>
