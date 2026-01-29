@@ -46,6 +46,10 @@ public class ProfileController : ControllerBase
                 UserId = userId,
                 FirstName = request.FirstName,
                 LastName = request.LastName,
+                Age = request.Age, //update to version 2.1
+                Gender = request.Gender, //update to version 2.1
+                Hobby = request.Hobby, //update to version 2.1
+                MyPlaceOfBirth = request.MyPlaceOfBirth, //update to version 2.1
                 AvatarUrl = avatarUrl
             };
             await _repository.AddAsync(profile);
@@ -82,4 +86,5 @@ public class ProfileController : ControllerBase
 
         return Guid.Empty;
     }
+
 }
