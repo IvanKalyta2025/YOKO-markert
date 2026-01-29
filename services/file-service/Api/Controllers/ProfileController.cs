@@ -58,6 +58,10 @@ public class ProfileController : ControllerBase
         {
             existingProfile.FirstName = request.FirstName;
             existingProfile.LastName = request.LastName;
+            existingProfile.Age = request.Age; //update to version 2.1
+            existingProfile.Gender = request.Gender; //update to version 2.1
+            existingProfile.Hobby = request.Hobby; //update to version 2.1
+            existingProfile.MyPlaceOfBirth = request.MyPlaceOfBirth; //update to version 2.1
             existingProfile.AvatarUrl = avatarUrl;
             await _repository.UpdateAsync(existingProfile);
         }
