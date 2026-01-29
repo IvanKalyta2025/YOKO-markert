@@ -29,6 +29,7 @@ namespace Api.Services
                 UserId = userId,
                 FirstName = firstName,
                 LastName = lastName,
+
                 AvatarUrl = fileUrl
             };
             await _profileRepository.AddAsync(profile);

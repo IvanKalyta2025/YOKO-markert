@@ -56,7 +56,6 @@ namespace Api
                 contentType = "application/octet-stream";
             }
 
-            // using var stream = new MemoryStream(); på grunn av jeg kaste byte[] til Stream   
 
             if (fileData.CanSeek)
             {

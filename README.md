@@ -6,3 +6,5 @@ For login: You can immediately issue the user a token (JWT), since you have all 
 git revert плюс хеш
 
 git reset если не отправлен коммит на гит.
+
+Jeg fyller opp mer in Models
