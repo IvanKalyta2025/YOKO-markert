@@ -20,7 +20,15 @@ namespace Api.Services
             _fileService = fileService;
         }
 
-        public async Task CreateProfileAsync(Guid userId, string firstName, string lastName, Stream fileData, string fileName)
+        public async Task CreateProfileAsync(Guid userId,
+        string firstName,
+        string lastName,
+        Stream fileData,
+        string fileName,
+        int age, //update to version 2.1
+        string gender, //update to version 2.1
+        string hobby, //update to version 2.1
+        string myPlaceOfBirth) //update to version 2.1
         {
             var fileUrl = await _fileService.UploadFileAsync(_fileService.DefaultBucketName, fileName, fileData);
 
@@ -29,7 +37,10 @@ namespace Api.Services
                 UserId = userId,
                 FirstName = firstName,
                 LastName = lastName,
-
+                Age = age, //update to version 2.1
+                Gender = gender, //update to version 2.1
+                Hobby = hobby, //update to version 2.1
+                MyPlaceOfBirth = myPlaceOfBirth, //update to version 2.1
                 AvatarUrl = fileUrl
             };
             await _profileRepository.AddAsync(profile);
