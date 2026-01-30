@@ -25,7 +25,7 @@ services:
       - ASPNETCORE_ENVIRONMENT=Development
       - ConnectionStrings__DefaultConnection=Host=postgres;Port=5432;Database=filesdb;Username=user;Password=pass
 
-      - Minio__Endpoint=object-storage:9000
+      - Minio__Endpoint=localhost:9000
       - Minio__AccessKey=minioadmin
       - Minio__SecretKey=minioadmin
 
@@ -36,7 +36,7 @@ services:
       - object-storage
   postgres:
     image: postgres:15
-    container_name: yoko-postgres-1
+    container_name: localhost
     ports:
       - "5432:5432"
     environment:

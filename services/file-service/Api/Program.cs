@@ -18,8 +18,7 @@ using Api.Interfaces;
 var builder = WebApplication.CreateBuilder(args);
 
 var conn = builder.Configuration.GetConnectionString("DefaultConnection")
-           ?? "Host=postgres;Port=5432;Database=filesdb;Username=user;Password=pass";
-
+              ?? "Host=localhost;Port=5432;Database=filesdb;Username=user;Password=pass";
 builder.Services.AddDbContext<AppDbContext>(options => options.UseNpgsql(conn));
 
 

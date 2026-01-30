@@ -2,7 +2,7 @@ using System;
 using System.Threading.Tasks;
 using Api.Models;
 
-namespace Api.Repositories
+namespace Api.Interfaces
 {
     public interface IProfileRepository
     {

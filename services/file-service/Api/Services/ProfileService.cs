@@ -6,6 +6,8 @@ using Api.Models;
 using Api.Repositories;
 using Microsoft.AspNetCore.Routing.Constraints;
 using System.IO;
+using Api.Interfaces;
+
 
 namespace Api.Services
 {
