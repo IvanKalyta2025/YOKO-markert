@@ -209,6 +209,25 @@
             <p class="role-badge">Bruker</p>
           </div>
 
+          <div class="profile-details">
+            <div class="profile-detail">
+              <span>Alder</span>
+              <strong id="view-age">—</strong>
+            </div>
+            <div class="profile-detail">
+              <span>Kjønn</span>
+              <strong id="view-gender">—</strong>
+            </div>
+            <div class="profile-detail">
+              <span>Hobby</span>
+              <strong id="view-hobby">—</strong>
+            </div>
+            <div class="profile-detail">
+              <span>Fødested</span>
+              <strong id="view-birthplace">—</strong>
+            </div>
+          </div>
+
           <div class="profile-actions">
             <button class="primary-btn" onclick="showSection('profile-edit')">
               <span class="material-symbols-outlined">edit</span>
@@ -276,6 +295,51 @@
                 id="edit-lastname"
                 placeholder="Nordmann"
                 autocomplete="family-name"
+              />
+            </div>
+
+            <div class="input-group">
+              <label for="edit-age">Alder</label>
+              <input
+                type="number"
+                name="Age"
+                id="edit-age"
+                placeholder="25"
+                min="0"
+                required
+              />
+            </div>
+
+            <div class="input-group">
+              <label for="edit-gender">Kjønn</label>
+              <input
+                type="text"
+                name="Gender"
+                id="edit-gender"
+                placeholder="Mann / Kvinne / Annet"
+                required
+              />
+            </div>
+
+            <div class="input-group">
+              <label for="edit-hobby">Hobby</label>
+              <input
+                type="text"
+                name="Hobby"
+                id="edit-hobby"
+                placeholder="Fotball"
+                required
+              />
+            </div>
+
+            <div class="input-group">
+              <label for="edit-birthplace">Fødested</label>
+              <input
+                type="text"
+                name="MyPlaceOfBirth"
+                id="edit-birthplace"
+                placeholder="Oslo"
+                required
               />
             </div>
 
@@ -521,6 +585,23 @@
               profile.firstName || "";
             document.getElementById("edit-lastname").value =
               profile.lastName || "";
+            document.getElementById("edit-age").value =
+              profile.age ?? "";
+            document.getElementById("edit-gender").value =
+              profile.gender || "";
+            document.getElementById("edit-hobby").value =
+              profile.hobby || "";
+            document.getElementById("edit-birthplace").value =
+              profile.myPlaceOfBirth || "";
+
+            document.getElementById("view-age").innerText =
+              profile.age ?? "—";
+            document.getElementById("view-gender").innerText =
+              profile.gender || "—";
+            document.getElementById("view-hobby").innerText =
+              profile.hobby || "—";
+            document.getElementById("view-birthplace").innerText =
+              profile.myPlaceOfBirth || "—";
 
             showSection("profile-view");
           } else if (response.status === 404) {

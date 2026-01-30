@@ -25,7 +25,7 @@ services:
       - ASPNETCORE_ENVIRONMENT=Development
       - ConnectionStrings__DefaultConnection=Host=postgres;Port=5432;Database=filesdb;Username=user;Password=pass
 
-      - Minio__Endpoint=localhost:9000
+      - Minio__Endpoint=object-storage:9000
       - Minio__AccessKey=minioadmin
       - Minio__SecretKey=minioadmin
 
