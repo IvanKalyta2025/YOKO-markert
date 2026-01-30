@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Api.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20260125142747_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20260129114832_ProfileNewV2")]
+    partial class ProfileNewV2
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -31,20 +31,7 @@ namespace Api.Migrations
                         .HasColumnType("uuid");
 
                     b.Property<int>("Age")
-                        .IsRequired()
                         .HasColumnType("integer");
-
-                    b.Property<string>("Gender")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("Hobby")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("MyPlaceOfBirth")
-                        .IsRequired()
-                        .HasColumnType("text");
 
                     b.Property<string>("AvatarUrl")
                         .IsRequired()
@@ -54,7 +41,19 @@ namespace Api.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<string>("Gender")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Hobby")
+                        .IsRequired()
+                        .HasColumnType("text");
+
                     b.Property<string>("LastName")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("MyPlaceOfBirth")
                         .IsRequired()
                         .HasColumnType("text");
 

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Api.Services
+namespace Api.Interfaces
 {
     public interface IUserService
     {

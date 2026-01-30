@@ -11,11 +11,17 @@ using Npgsql.EntityFrameworkCore.PostgreSQL;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using Api.Interfaces;
+
+
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseNpgsql("Host=postgres;Database=filesdb;Username=user;Password=pass"));
+var conn = builder.Configuration.GetConnectionString("DefaultConnection")
+           ?? "Host=postgres;Port=5432;Database=filesdb;Username=user;Password=pass";
+
+builder.Services.AddDbContext<AppDbContext>(options => options.UseNpgsql(conn));
+
 
 builder.WebHost.UseUrls("http://0.0.0.0:8080");
 
@@ -45,7 +51,7 @@ builder.Services.AddScoped<IProfileRepository, ProfileRepository>();
 builder.Services.AddScoped<JwtTokenService>();
 builder.Services.AddScoped<UserAuthorizationService>();
 builder.Services.AddScoped<MinioService>();
-
+builder.Services.AddScoped<ProfileService>();
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 

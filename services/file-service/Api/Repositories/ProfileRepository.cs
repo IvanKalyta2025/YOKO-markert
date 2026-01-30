@@ -4,6 +4,8 @@ using System.Threading.Tasks;
 using Api.Data;
 using Api.Models;
 using Microsoft.EntityFrameworkCore;
+using Api.Interfaces;
+
 
 namespace Api.Repositories
 {
