@@ -4,7 +4,6 @@ using Minio;
 using Microsoft.Extensions.Configuration;
 using Minio.DataModel.Args;
 using Microsoft.AspNetCore.StaticFiles;
-using System.Text.RegularExpressions;
 
 namespace Api
 {

@@ -2,7 +2,7 @@ using System;
 using System.IO;
 using System.Threading.Tasks;
 using Api.Data;
-using Api.Models;
+using Api.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Api.Interfaces;
 

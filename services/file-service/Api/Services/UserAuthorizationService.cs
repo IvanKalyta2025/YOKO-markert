@@ -1,10 +1,6 @@
-using Api.Models;
-using Api.Repositories;
-using BCrypt.Net;
-using System.ComponentModel.DataAnnotations;
-using System.Security.Cryptography;
-using System.Text;
-using Api.Controllers;
+using Api.Contracts.Requests;
+using Api.Contracts.Responses;
+using Api.Domain.Entities;
 using Api.Interfaces;
 
 

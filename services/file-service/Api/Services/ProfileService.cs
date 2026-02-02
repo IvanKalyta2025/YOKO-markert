@@ -1,10 +1,6 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
-using Api.Models;
-using Api.Repositories;
-using Microsoft.AspNetCore.Routing.Constraints;
+using Api.Domain.Entities;
 using System.IO;
 using Api.Interfaces;
 

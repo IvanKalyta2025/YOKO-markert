@@ -1,13 +1,9 @@
-using Minio;
 using Microsoft.AspNetCore.HttpOverrides;
-using Api;
 using Api.Services;
 using Api.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using Api.Repositories;
-using System.Security.Claims;
-using Npgsql.EntityFrameworkCore.PostgreSQL;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;

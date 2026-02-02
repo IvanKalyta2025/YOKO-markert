@@ -1,8 +1,5 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
-using Api.Models;
+using Api.Domain.Entities;
 
 namespace Api.Interfaces
 {

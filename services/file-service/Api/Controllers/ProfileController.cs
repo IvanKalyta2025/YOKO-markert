@@ -1,4 +1,5 @@
-using Api.Models;
+using Api.Contracts.Requests;
+using Api.Domain.Entities;
 using Api.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

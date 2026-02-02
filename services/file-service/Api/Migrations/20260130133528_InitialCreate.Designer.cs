@@ -25,7 +25,7 @@ namespace Api.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("Api.Models.Profile", b =>
+            modelBuilder.Entity("Api.Domain.Entities.Profile", b =>
                 {
                     b.Property<Guid>("UserId")
                         .HasColumnType("uuid");
@@ -62,7 +62,7 @@ namespace Api.Migrations
                     b.ToTable("Profiles");
                 });
 
-            modelBuilder.Entity("Api.Models.User", b =>
+            modelBuilder.Entity("Api.Domain.Entities.User", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -81,11 +81,11 @@ namespace Api.Migrations
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("Api.Models.Profile", b =>
+            modelBuilder.Entity("Api.Domain.Entities.Profile", b =>
                 {
-                    b.HasOne("Api.Models.User", "User")
+                    b.HasOne("Api.Domain.Entities.User", "User")
                         .WithOne()
-                        .HasForeignKey("Api.Models.Profile", "UserId")
+                        .HasForeignKey("Api.Domain.Entities.Profile", "UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
