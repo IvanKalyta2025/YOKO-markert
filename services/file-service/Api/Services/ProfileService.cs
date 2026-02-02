@@ -24,7 +24,7 @@ namespace Api.Services
         Stream fileData,
         string fileName,
         int age, //update to version 2.1
-        string gender, //update to version 2.1
+        Gender gender, //update to version 2.1
         string hobby, //update to version 2.1
         string myPlaceOfBirth) //update to version 2.1
         {

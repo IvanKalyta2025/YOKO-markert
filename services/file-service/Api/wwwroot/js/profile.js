@@ -44,8 +44,9 @@ export async function loadProfileData() {
 
       setValue("edit-firstname", profile.firstName || "");
       setValue("edit-lastname", profile.lastName || "");
+      const genderEnum = normalizeGender(profile.gender);
       setValue("edit-age", profile.age ?? "");
-      setValue("edit-gender", profile.gender || "");
+      setValue("edit-gender", genderEnum);
       setValue("edit-hobby", profile.hobby || "");
       setValue("edit-birthplace", profile.myPlaceOfBirth || "");
 
@@ -56,7 +57,7 @@ export async function loadProfileData() {
       };
 
       setText("view-age", profile.age ?? "—");
-      setText("view-gender", profile.gender || "—");
+      setText("view-gender", getGenderLabel(profile.gender));
       setText("view-hobby", profile.hobby || "—");
       setText("view-birthplace", profile.myPlaceOfBirth || "—");
 
@@ -75,6 +76,34 @@ export async function loadProfileData() {
     console.error(error);
     showSection("login");
   }
+}
+
+const genderEnumByIndex = ["Male", "Female", "Other"];
+const genderLabelByEnum = {
+  Male: "Mann",
+  Female: "Kvinne",
+  Other: "Annet",
+};
+
+function normalizeGender(value) {
+  if (value === null || value === undefined || value === "") return "";
+  if (typeof value === "number") {
+    return genderEnumByIndex[value] || "";
+  }
+  if (typeof value === "string") {
+    const trimmed = value.trim();
+    const lowered = trimmed.toLowerCase();
+    if (lowered === "male") return "Male";
+    if (lowered === "female") return "Female";
+    if (lowered === "other") return "Other";
+    return trimmed;
+  }
+  return "";
+}
+
+function getGenderLabel(value) {
+  const normalized = normalizeGender(value);
+  return genderLabelByEnum[normalized] || "—";
 }
 
 export async function handleProfileUpdate(event) {
