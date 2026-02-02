@@ -14,7 +14,6 @@ COPY . .
 # Собираем основной проект
 RUN dotnet publish Api/Api.csproj --configuration Release --output /app/publish
 
-# Используем рантайм 10.0 для запуска
 FROM mcr.microsoft.com/dotnet/aspnet:10.0 AS base
 WORKDIR /app
 

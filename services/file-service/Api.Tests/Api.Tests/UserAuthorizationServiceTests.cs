@@ -1,11 +1,11 @@
 ﻿using Api.Services;
-using Api.Repositories;
-using Api.Models;
+using Api.Interfaces;
+using Api.Contracts.Requests;
+using Api.Domain.Entities;
 using NSubstitute;
-using FluentAssertions;
 using Xunit;
-using System.Reactive.Concurrency;
-using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Configuration;
+using System.Collections.Generic;
 
 //dotnet add package NSubstitute.Analyzers.CSharp
 
@@ -21,7 +21,14 @@ public class UserAuthorizationServiceTests
     public UserAuthorizationServiceTests()
     {
         _userRepository = Substitute.For<IUserRepository>();
-        _service = new UserAuthorizationService(_userRepository);
+        var config = new ConfigurationBuilder()
+            .AddInMemoryCollection(new Dictionary<string, string?>
+            {
+                ["Jwt:Key"] = "test_key_test_key_test_key_test_key_1234"
+            })
+            .Build();
+        var jwtService = new JwtTokenService(config);
+        _service = new UserAuthorizationService(_userRepository, jwtService);
     }
 
     [Theory]
