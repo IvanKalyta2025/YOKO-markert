@@ -1,0 +1,214 @@
+/*
+  Landing (role select) – strict mock style.
+
+  This file overrides your base styles ONLY when landing is visible.
+  It is robust even if JS doesn't add body.landing-mode.
+
+  State detection:
+  - body.landing-mode (preferred)
+  - body:has(#landing[style*="display: flex"]) (fallback)
+*/
+
+:root {
+  --landing-bg-1: #f7f9ff;
+  --landing-bg-2: #eef3ff;
+  --landing-card: #ffffff;
+  --landing-border: #e6edf7;
+  --landing-text: #2f3b4a;
+  --landing-muted: #7a8798;
+  --landing-accent: #4f8efc;
+}
+
+/* State selector (apply landing look only when landing is shown) */
+body.landing-mode,
+body:has(#landing[style*="display: flex"]),
+body:has(#landing.active) {
+  background:
+    radial-gradient(
+      1200px 700px at 15% 10%,
+      rgba(79, 142, 252, 0.1),
+      transparent 60%
+    ),
+    radial-gradient(
+      900px 600px at 85% 0%,
+      rgba(79, 142, 252, 0.06),
+      transparent 55%
+    ),
+    linear-gradient(180deg, var(--landing-bg-1), var(--landing-bg-2)) !important;
+  color: var(--landing-text);
+}
+
+/* Kill the old big gradient blob */
+body.landing-mode .background-shape,
+body:has(#landing[style*="display: flex"]) .background-shape,
+body:has(#landing.active) .background-shape {
+  display: none !important;
+}
+
+/* Center the big white card like in the mock */
+body.landing-mode .container,
+body:has(#landing[style*="display: flex"]) .container,
+body:has(#landing.active) .container {
+  min-height: 100vh !important;
+  max-width: none !important;
+  width: 100% !important;
+  padding: 48px 24px !important;
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+}
+
+/* Make main card wide + white */
+body.landing-mode #mainCard,
+body:has(#landing[style*="display: flex"]) #mainCard,
+body:has(#landing.active) #mainCard {
+  position: relative !important;
+  width: min(1200px, 100%) !important;
+  background: var(--landing-card) !important;
+  border: 1px solid var(--landing-border) !important;
+  border-radius: 18px !important;
+  box-shadow: 0 28px 90px rgba(15, 23, 42, 0.1) !important;
+  padding: 82px 76px 86px !important;
+}
+
+/* Hide brand header on landing (so Jobbmarked doesn't show behind cards) */
+body.landing-mode .brand-header,
+body:has(#landing[style*="display: flex"]) .brand-header,
+body:has(#landing.active) .brand-header,
+#landing.active ~ .brand-header {
+  display: none !important;
+}
+
+/* Landing layout */
+body.landing-mode #landing,
+body:has(#landing[style*="display: flex"]) #landing,
+body:has(#landing.active) #landing {
+  display: flex !important;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 32px;
+  width: 100%;
+  padding: 0 !important;
+  margin: 0 !important;
+  position: relative;
+}
+
+/* Title */
+#landing .landing-title {
+  margin: 0;
+  max-width: 860px;
+  font-size: clamp(2.2rem, 3vw, 3.2rem);
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  line-height: 1.12;
+  color: var(--landing-text);
+  z-index: 2;
+}
+
+/* Two role cards */
+#landing .role-grid {
+  width: 100%;
+  max-width: 980px;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(320px, 1fr));
+  gap: 28px;
+  margin-top: 6px;
+  z-index: 2;
+}
+
+#landing .role-card {
+  appearance: none;
+  -webkit-appearance: none;
+  border: 1px solid var(--landing-border);
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 58px 46px;
+  min-height: 300px;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+  box-shadow: 0 18px 55px rgba(15, 23, 42, 0.08);
+  transition:
+    transform 140ms ease,
+    box-shadow 140ms ease,
+    border-color 140ms ease;
+}
+
+#landing .role-card:hover {
+  transform: translateY(-3px);
+  border-color: rgba(79, 142, 252, 0.4);
+  box-shadow: 0 22px 70px rgba(15, 23, 42, 0.1);
+}
+
+#landing .role-card:focus-visible {
+  outline: none;
+  border-color: rgba(79, 142, 252, 0.65);
+  box-shadow:
+    0 0 0 4px rgba(79, 142, 252, 0.18),
+    0 22px 70px rgba(15, 23, 42, 0.1);
+}
+
+#landing .role-icon {
+  width: 96px;
+  height: 96px;
+  display: grid;
+  place-items: center;
+}
+
+#landing .role-icon .material-symbols-outlined {
+  font-size: 74px;
+  color: rgba(79, 142, 252, 0.55);
+}
+
+#landing .role-heading {
+  font-size: 1.85rem;
+  font-weight: 650;
+  letter-spacing: -0.01em;
+  color: var(--landing-text);
+}
+
+#landing .role-heading strong {
+  letter-spacing: 0.06em;
+}
+
+#landing .role-sub {
+  margin-top: 10px;
+  font-size: 1.08rem;
+  color: var(--landing-muted);
+  font-weight: 500;
+}
+
+/* Responsive */
+@media (max-width: 980px) {
+  body.landing-mode #mainCard,
+  body:has(#landing[style*="display: flex"]) #mainCard,
+  body:has(#landing.active) #mainCard {
+    padding: 58px 26px 62px !important;
+  }
+
+  body.landing-mode .landing-top,
+  body:has(#landing[style*="display: flex"]) .landing-top,
+  body:has(#landing.active) .landing-top {
+    top: 18px;
+    right: 18px;
+  }
+
+  #landing .role-grid {
+    grid-template-columns: 1fr;
+    gap: 18px;
+    max-width: 620px;
+  }
+
+  #landing .role-card {
+    padding: 42px 26px;
+    min-height: 240px;
+  }
+
+  #landing .role-heading {
+    font-size: 1.55rem;
+  }
+}

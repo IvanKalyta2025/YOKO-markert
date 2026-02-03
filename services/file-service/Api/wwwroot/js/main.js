@@ -1,6 +1,7 @@
 import { showSection, previewImage } from "./ui.js";
 import { handleAuth } from "./auth.js";
 import { loadProfileData, handleProfileUpdate } from "./profile.js";
+import { wireLanding } from "./landing.js";
 import {
   prefillEmailToPublicChangePassword,
   handleChangePasswordPublic,
@@ -11,12 +12,12 @@ import { logout } from "./session.js";
 function wireForms() {
   const loginForm = document.getElementById("login-form");
   loginForm?.addEventListener("submit", (e) =>
-    handleAuth(e, "/Auth/login", "login")
+    handleAuth(e, "/Auth/login", "login"),
   );
 
   const registerForm = document.getElementById("register-form");
   registerForm?.addEventListener("submit", (e) =>
-    handleAuth(e, "/Auth/register", "register")
+    handleAuth(e, "/Auth/register", "register"),
   );
 
   const cpPublicForm = document.getElementById("cp-public-form");
@@ -61,7 +62,8 @@ function wireNavigation() {
 
     const action = actionEl.getAttribute("data-action");
     if (action === "logout") logout();
-    if (action === "open-public-change-password") prefillEmailToPublicChangePassword();
+    if (action === "open-public-change-password")
+      prefillEmailToPublicChangePassword();
   });
 
   document.addEventListener("keydown", activateByKeyboard);
@@ -71,7 +73,7 @@ function boot() {
   if (localStorage.getItem("token")) {
     loadProfileData();
   } else {
-    showSection("login");
+    showSection("landing");
   }
 }
 
@@ -79,5 +81,6 @@ document.addEventListener("DOMContentLoaded", () => {
   wireForms();
   wireAvatar();
   wireNavigation();
+  wireLanding();
   boot();
 });

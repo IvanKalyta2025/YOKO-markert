@@ -7,6 +7,8 @@ export function endInitialRender() {
 }
 
 export function showSection(id) {
+  document.body.classList.toggle("landing-mode", id === "landing");
+
   document.querySelectorAll(".form-section").forEach((s) => {
     s.classList.remove("active");
     s.style.display = "none";

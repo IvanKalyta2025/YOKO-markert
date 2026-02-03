@@ -29,15 +29,46 @@
     />
 
     <!-- Base styles + profile styles -->
+    <!-- update 2.3.1 -->
     <link rel="stylesheet" href="style.css" />
     <link rel="stylesheet" href="profile.css" />
+    <link rel="stylesheet" href="landing.css" />
   </head>
 
   <body>
     <div class="background-shape" aria-hidden="true"></div>
 
     <main class="container">
+      </div>
+
       <div class="card" id="mainCard">
+        <section id="landing" class="form-section">
+          <h2 class="landing-title">Hva beskriver deg best?</h2>
+
+          <div class="role-grid">
+            <button type="button" class="role-card" id="role-seeker">
+              <div class="role-icon">
+                <span class="material-symbols-outlined">how_to_reg</span>
+              </div>
+              <div>
+                <div class="role-heading">Jeg er en <strong>SØKER</strong></div>
+                <div class="role-sub">Finn din neste jobb</div>
+              </div>
+            </button>
+
+            <button type="button" class="role-card" id="role-company">
+              <div class="role-icon">
+                <span class="material-symbols-outlined">business_center</span>
+              </div>
+              <div>
+                <div class="role-heading">
+                  Jeg er en <strong>BEDRIFT</strong>
+                </div>
+                <div class="role-sub">Finn kandidater til din bedrift</div>
+              </div>
+            </button>
+          </div>
+        </section>
         <div class="brand-header">
           <h1>Jobbmarked</h1>
           <p>Din karriere starter her</p>
