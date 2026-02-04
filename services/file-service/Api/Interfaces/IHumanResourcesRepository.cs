@@ -6,7 +6,7 @@ namespace Api.Interfaces
     public interface IHumanResourcesRepository
     {
         Task AddAsync(HumanResources humanResources);
-        Task<HumanResources?> GetByEmailAsync(string email);
+        Task<HumanResources?> GetByEmailAsync(string email, string KeyForHumanResources);
         Task SaveChangesAsync();
     }
 }

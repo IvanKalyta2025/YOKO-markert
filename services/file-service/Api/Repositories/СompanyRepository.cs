@@ -1,24 +1,34 @@
 
 using Api.Interfaces;
 using Api.Domain.Entities;
+using Api.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace Api.Repositories
 {
     public class СompanyRepository : IHumanResourcesRepository
     {
-        public Task AddAsync(HumanResources humanResources)
+
+        private readonly AppDbContext _dbСompanyRepository;
+
+        public СompanyRepository(AppDbContext dbСompanyRepository)
         {
-            throw new NotImplementedException();
+            _dbСompanyRepository = dbСompanyRepository;
+        }
+        public async Task AddAsync(HumanResources humanResources)
+        {
+            await _dbСompanyRepository.HumanResources.AddAsync(humanResources);
+            await _dbСompanyRepository.SaveChangesAsync();
         }
 
-        public Task<HumanResources?> GetByEmailAsync(string email)
+        public async Task<HumanResources?> GetByEmailAsync(string email, string KeyForHumanResources)
         {
-            throw new NotImplementedException();
+            return await _dbСompanyRepository.HumanResources.FirstOrDefaultAsync(hr => hr.EmailHumanResources == email && hr.KeyForHumanResources == KeyForHumanResources);
         }
 
-        public Task SaveChangesAsync()
+        public async Task SaveChangesAsync()
         {
-            throw new NotImplementedException();
+            await _dbСompanyRepository.SaveChangesAsync();
         }
     }
 }
