@@ -11,17 +11,18 @@ namespace Api.Data
         }
 
         public DbSet<User> Users => Set<User>();
+
+        public DbSet<HumanResources> HumanResources => Set<HumanResources>(); //update 2.4
         public DbSet<Profile> Profiles { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
 
-            // Четко прописываем связь 1-к-1
             modelBuilder.Entity<Profile>()
-                .HasOne(p => p.User)      // У профиля есть один пользователь
-                .WithOne()               // У пользователя (может быть) один профиль
-                .HasForeignKey<Profile>(p => p.UserId); // Ключ — UserId (никаких UserId1!)
+                .HasOne(p => p.User)
+                .WithOne()
+                .HasForeignKey<Profile>(p => p.UserId);
         }
     }
 }
