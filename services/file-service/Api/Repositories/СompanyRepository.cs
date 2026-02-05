@@ -21,7 +21,7 @@ namespace Api.Repositories
             await _dbСompanyRepository.SaveChangesAsync();
         }
 
-        public async Task<HumanResources?> GetByEmailAsync(string email, string KeyForHumanResources)
+        public async Task<HumanResources?> GetByEmailAndKeyForHumanResourcesAsync(string email, string KeyForHumanResources)
         {
             return await _dbСompanyRepository.HumanResources.FirstOrDefaultAsync(hr => hr.EmailHumanResources == email && hr.KeyForHumanResources == KeyForHumanResources);
         }
@@ -30,5 +30,7 @@ namespace Api.Repositories
         {
             await _dbСompanyRepository.SaveChangesAsync();
         }
+
+        public async Task
     }
 }
