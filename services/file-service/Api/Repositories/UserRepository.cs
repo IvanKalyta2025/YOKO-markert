@@ -19,14 +19,14 @@ namespace Api.Repositories
             await _db.SaveChangesAsync();
         }
 
-        public async Task AddAsync(User user)
+        public async Task AddAsync(User user, CancellationToken cancellationToken = default)
         {
-            await _db.Users.AddAsync(user);
-            await _db.SaveChangesAsync();
+            await _db.Users.AddAsync(user, cancellationToken);
+            await _db.SaveChangesAsync(cancellationToken);
         }
-        public async Task<User?> GetByEmailAsync(string email)
+        public async Task<User?> GetByEmailAsync(string email, CancellationToken cancellationToken = default)
         {
-            return await _db.Users.FirstOrDefaultAsync(u => u.Email == email);
+            return await _db.Users.FirstOrDefaultAsync(u => u.Email == email, cancellationToken);
         }
     }
 }

@@ -11,9 +11,9 @@ namespace Api.Data
         }
 
         public DbSet<User> Users => Set<User>();
-
-        public DbSet<HumanResources> HumanResources => Set<HumanResources>(); //update 2.4
-        public DbSet<Profile> Profiles { get; set; }
+        public DbSet<Profile> Profiles => Set<Profile>();
+        public DbSet<UserRole> UserRoles => Set<UserRole>();
+        public DbSet<Role> Roles => Set<Role>();
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
