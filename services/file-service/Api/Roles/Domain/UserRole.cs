@@ -2,12 +2,12 @@
 
 namespace Api.Domain.Entities
 {
-    public class UserRole
+    public sealed class UserRole
     {
-        public Guid UserId { get; set; }
+        public Guid UserId { get; init; }
         public User User { get; set; } = null!;
 
-        public int RoleId { get; set; }
+        public int RoleId { get; init; }
         public Role Role { get; set; } = null!;
     }
 }

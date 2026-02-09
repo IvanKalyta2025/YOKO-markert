@@ -1,12 +1,14 @@
 
+using System.Security;
+
 namespace Api.Domain.Entities
 {
-    public class RolePermission
+    public sealed class RolePermission
     {
-        public int RoleId { get; set; }
+        public int RoleId { get; init; }
         public Role Role { get; set; } = null!;
 
-        public int PermissionId { get; set; }
+        public int PermissionId { get; init; }
         public Permission Permission { get; set; } = null!;
     }
 }
