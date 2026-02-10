@@ -3,9 +3,7 @@ using Api.Interfaces;
 using Api.Contracts.Requests;
 using Api.Domain.Entities;
 using NSubstitute;
-using Xunit;
 using Microsoft.Extensions.Configuration;
-using System.Collections.Generic;
 
 //dotnet add package NSubstitute.Analyzers.CSharp
 
@@ -32,17 +30,19 @@ public class UserAuthorizationServiceTests
     }
 
     [Theory]
-    [InlineData("test@example.com", "Password123")]
+    [InlineData("test@example.com", "352352323")]
     public async Task Register_ShouldReturnFailure_WhenEmailAlreadyExists(string email, string password)
     {
         //Arrange
         var existingUser = new User { Email = email };
         _userRepository.GetByEmailAsync(email).Returns(existingUser);
+
         var request = new RegisterRequest(email, password);
+
         //ACT
         var result = await _service.RegisterAsync(request);
 
-        //ASSERT
+        //ASSE
         Assert.False(result.Success);
         Assert.Equal("Email already in use.", result.Message);
         await _userRepository.Received(0).AddAsync(Arg.Any<User>());

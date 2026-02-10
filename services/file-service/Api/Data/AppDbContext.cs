@@ -1,6 +1,5 @@
 using Microsoft.EntityFrameworkCore;
 using Api.Domain.Entities;
-using SQLitePCL;
 
 namespace Api.Data
 {

@@ -8,3 +8,9 @@ git revert плюс хеш
 git reset если не отправлен коммит на гит.
 
 Jeg fyller opp mer in Models
+
+dotnet ef migrations remove
+dotnet ef database drop --force
+
+dotnet ef migrations add AddRbacTables
+dotnet ef database update
